@@ -1,38 +1,54 @@
-# nakoda-web
+# Nakoda Jewellers - Premium E-commerce Platform
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A modern, high-performance web application built for a luxury jewellery store. Features a fully custom admin dashboard, heavily optimized static generation (ISR), and a WhatsApp-first inquiry model.
 
-## Getting Started
+## Technology Stack
 
-First, run the development server:
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS v4
+- **Backend & Auth:** Supabase
+- **Database:** PostgreSQL (via Supabase)
+- **Storage:** Supabase Storage (Product Images)
+- **Validation:** Zod + React Hook Form
+- **Icons:** Lucide React
 
+## Key Features
+
+- **Storefront:** 
+  - Dynamic product catalog with advanced filtering (Categories, Collections, Metals, Occasion)
+  - Lightning fast page loads via Next.js ISR (`force-dynamic` for strict real-time routes)
+  - SEO optimized with dynamic sitemaps and rich metadata
+  - WhatsApp integrated contact model
+- **Admin Dashboard:**
+  - Secure RLS and server-side middleware protection
+  - Full CRUD for Products, Categories, and Collections
+  - Drag-and-drop image upload manager
+  - Smart "New Arrival" badge expiry engine
+
+## Setup Instructions
+
+### 1. Environment Variables
+Copy the `.env.example` file to `.env.local`:
 ```bash
+cp .env.example .env.local
+```
+Fill in the required Supabase and site variables.
+
+### 2. Database Setup (Supabase)
+1. Create a new Supabase project.
+2. Run all SQL migrations located in the `supabase/migrations/` directory in order.
+3. Configure your Supabase Storage bucket (`product-images`) to be public.
+
+### 3. Install & Run
+```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Security Model
+The application uses strict Row Level Security (RLS). All public data is read-only. 
+Admin write operations are restricted entirely to the `public.is_admin()` custom PostgreSQL function, which verifies the user's UUID against the `admin_users` table.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+This project is highly optimized for deployment on **Vercel**.
+Ensure you inject your 4 environment variables into the Vercel project settings prior to your first build to prevent Next.js static generation errors.

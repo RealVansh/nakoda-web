@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next'
-import { getProducts } from '@/actions/product.actions'
+import { getProductSlugs } from '@/actions/product.actions'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nakodajewellers.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await getProducts()
+  const products = await getProductSlugs()
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

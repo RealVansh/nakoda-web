@@ -6,19 +6,21 @@ import {
   Package,
   Tags,
   Layers,
-  MessageSquare,
   LogOut,
 } from 'lucide-react'
+
+import { requireAdmin } from '@/actions/auth.actions'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Categories', href: '/admin/categories', icon: Tags },
   { name: 'Collections', href: '/admin/collections', icon: Layers },
-  { name: 'Inquiries', href: '/admin/inquiries', icon: MessageSquare },
 ]
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  await requireAdmin()
+  
   return (
     <div className="theme-admin flex h-screen bg-secondary">
       {/* Sidebar */}

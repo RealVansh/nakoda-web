@@ -212,6 +212,7 @@ export async function getProducts(): Promise<ProductListItem[]> {
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -265,6 +266,7 @@ export async function getPaginatedProducts(params: ProductFilterParams = {}): Pr
       collections(name),
       product_images(*)
     `, { count: 'exact' })
+    .eq('is_active', true)
 
   if (categoryId) query = query.eq('category_id', categoryId)
   if (collectionId) query = query.eq('collection_id', collectionId)
@@ -341,6 +343,7 @@ export async function getFeaturedProducts(): Promise<ProductWithImages[]> {
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .eq('featured', true)
     .order('created_at', { ascending: false })
     .limit(8)
@@ -363,6 +366,7 @@ export async function getProductBySlug(slug: string): Promise<ProductWithImages 
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .eq('slug', slug)
     .single()
 
@@ -384,6 +388,7 @@ export async function getNewArrivals(limit = 8): Promise<ProductWithImages[]> {
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .contains('badges', ['New Arrival'])
     .gte('new_arrival_until', new Date().toISOString())
     .order('created_at', { ascending: false })
@@ -412,6 +417,7 @@ export async function getRelatedProducts(
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .neq('id', excludeProductId)
     .limit(limit)
 
@@ -439,6 +445,7 @@ export async function searchProducts(query: string, limit = 12): Promise<Product
       collections(name),
       product_images(*)
     `)
+    .eq('is_active', true)
     .textSearch('fts', query, { type: 'websearch' })
     .limit(limit)
 
@@ -598,4 +605,20 @@ export async function removeProductImage(imageId: string): Promise<ActionResult>
   revalidatePath('/products')
 
   return { success: true }
+}
+
+export async function getProductSlugs(): Promise<{ slug: string; updated_at: string; created_at: string }[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('products')
+    .select('slug, updated_at, created_at')
+    .eq('is_active', true)
+    .order('updated_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching product slugs:', error)
+    return []
+  }
+
+  return data || []
 }
