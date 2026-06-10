@@ -145,24 +145,36 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ Section 3: Built on Trust (Our Story) ═══ */}
-      <section className="py-28 bg-background">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4">
-            Our Story
-          </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground uppercase font-serif mb-10">
-            Built on Trust
-          </h2>
-          <div className="h-px w-16 bg-primary mx-auto mb-10" />
-          <p className="text-lg text-muted-foreground leading-[1.9]">
-            For over 12 years, Nakoda Jewellers has been dedicated to creating
-            handcrafted jewellery with a focus on quality, craftsmanship, and
-            attention to detail. From specialized bangles to antique and
-            contemporary designs, we take pride in delivering jewellery that
-            reflects tradition, artistry, and trust.
-          </p>
+      <section className="relative py-32 bg-background overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center md:bg-right bg-no-repeat"
+          style={{ backgroundImage: 'url(/images/about-trust-bg.png)' }}
+        />
+        {/* Dark Gradient Overlay for Readability */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-r from-background via-background/90 to-background/10 md:to-transparent" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-2xl text-left">
+            <p className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4">
+              Our Story
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground uppercase font-serif mb-8">
+              Built on Trust
+            </h2>
+            <div className="h-px w-16 bg-primary mb-10" />
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              For over 12 years, Nakoda Jewellers has been dedicated to creating
+              handcrafted jewellery with a focus on quality, craftsmanship, and
+              attention to detail. From specialized bangles to antique and
+              contemporary designs, we take pride in delivering jewellery that
+              reflects tradition, artistry, and trust.
+            </p>
+          </div>
         </div>
       </section>
+
+
 
       {/* ═══ Section 4: Our Craftsmanship ═══ */}
       <section className="py-28 bg-secondary">
