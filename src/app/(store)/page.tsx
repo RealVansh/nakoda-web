@@ -45,7 +45,7 @@ export default async function StoreHomepage() {
               src="/images/hero_bangle.png"
               alt="18K Rose Gold Antique Bangle"
               fill
-              className="object-cover object-center lg:object-center opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2000ms]"
+              className="object-cover object-center opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2000ms]"
               priority
             />
             {/* Dark gradient overlay for mobile readability, fades left on desktop */}
@@ -60,10 +60,10 @@ export default async function StoreHomepage() {
               Handmade <span className="text-shimmer">Craftsmanship</span>
             </h1>
             <h2 className="text-lg md:text-2xl font-serif text-primary mb-6 lg:mb-8 tracking-wide">
-              Bangle Specialists & Antique Manufacturers
+              Exquisite Gold & Antique Jewellery
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-white/90 lg:text-muted-foreground max-w-lg mb-10 lg:mb-12 leading-relaxed">
-              Crafting timeless, intricate jewellery for retailers and discerning customers across India. Authentic. Traditional. Bespoke.
+              Crafting timeless, intricate pieces for every occasion. From bespoke bridal wear to everyday elegance. Authentic. Traditional. Bespoke.
             </p>
             <div>
               <Link
@@ -78,29 +78,7 @@ export default async function StoreHomepage() {
         </div>
       </section>
 
-      {/* ═══ 2. Compact Trust Strip ═══ */}
-      <section className="border-b border-border bg-secondary py-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:divide-x md:divide-border/60">
-            <div className="flex flex-col items-center justify-center px-4 group">
-              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">12+</span>
-              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Years Experience</span>
-            </div>
-            <div className="flex flex-col items-center justify-center px-4 group">
-              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">100%</span>
-              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Handmade</span>
-            </div>
-            <div className="flex flex-col items-center justify-center px-4 group">
-              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">Direct</span>
-              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Manufacturer</span>
-            </div>
-            <div className="flex flex-col items-center justify-center px-4 group">
-              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">Antique</span>
-              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Specialists</span>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* ═══ 3. Shop by Category ═══ */}
       <section className="py-24 bg-background">
