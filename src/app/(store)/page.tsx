@@ -3,8 +3,8 @@ import { getCategories } from '@/actions/category.actions'
 import { ProductCard } from '@/components/store/ProductCard'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-
 import Image from 'next/image'
+import { Factory, Sparkles, Hammer, Clock, MessageCircle } from 'lucide-react'
 
 export const revalidate = 60 // ISR cache for 60 seconds
 
@@ -28,77 +28,83 @@ export default async function StoreHomepage() {
     getCategories()
   ])
 
+  const popularPieces = featuredProducts.slice(-4)
+
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hi%2C%20I%27m%20interested%20in%20wholesale%20jewellery%20partnership%20with%20Nakoda%20Jewellers.`
+
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative bg-background overflow-hidden min-h-[85vh] flex items-center justify-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center w-full py-32">
-          {/* Decorative gold line */}
-          <div className="h-px w-24 bg-primary mx-auto mb-10"></div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-foreground uppercase mb-8 font-serif text-shimmer">
-            Timeless Elegance
-          </h1>
-          <p className="mt-4 text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-14 leading-relaxed">
-            Discover our exclusive collection of handcrafted jewellery designed to make every moment unforgettable.
-          </p>
-          <Link
-            href="/products"
-            className="inline-block bg-primary hover:bg-primary-dark text-background font-medium py-4 px-10 rounded-sm transition-all text-lg uppercase tracking-wider glow-gold"
-          >
-            Explore Collection
-          </Link>
-        </div>
-        {/* Subtle decorative background pattern */}
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary via-background to-background pointer-events-none"></div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="py-28 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold tracking-widest text-foreground uppercase font-serif">Featured Pieces</h2>
-            <div className="h-1 w-24 bg-primary mx-auto mt-6"></div>
+      {/* ═══ 1. Hero Section (50/50 Split) ═══ */}
+      <section className="relative bg-background overflow-hidden border-b border-border min-h-[85vh] lg:min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* Text Side (Left) */}
+          <div className="flex flex-col justify-center px-4 sm:px-8 lg:px-16 xl:px-24 py-24 lg:py-32 xl:py-40 relative z-10">
+            <div className="h-px w-16 bg-primary mb-8 hidden lg:block"></div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground uppercase mb-6 font-serif leading-[1.1]">
+              12 Years of <br className="hidden lg:block"/>
+              Handmade <span className="text-shimmer">Craftsmanship</span>
+            </h1>
+            <h2 className="text-xl md:text-2xl font-serif text-primary mb-8 tracking-wide">
+              Bangle Specialists & Antique Manufacturers
+            </h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-lg mb-12 leading-relaxed">
+              Crafting timeless, intricate jewellery for retailers and discerning customers across India. Authentic. Traditional. Bespoke.
+            </p>
+            <div>
+              <Link
+                href="/products"
+                className="inline-block bg-primary hover:bg-primary-dark text-background font-medium py-4 px-10 rounded-sm transition-all text-sm md:text-base uppercase tracking-widest glow-gold"
+              >
+                Discover Collection
+              </Link>
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-            {featuredProducts.length > 0 ? (
-              featuredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    slug: product.slug,
-                    image_url: product.product_images?.[0]?.image_url || null,
-                    image_alt: product.product_images?.[0]?.alt_text || product.name,
-                    category_name: product.categories?.name || null,
-                  }}
-                />
-              ))
-            ) : (
-              <p className="text-center text-muted-foreground col-span-full">New collections arriving soon.</p>
-            )}
-          </div>
-
-          <div className="mt-16 text-center">
-            <Link 
-              href="/products" 
-              className="inline-flex items-center justify-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors tracking-widest uppercase"
-            >
-              View All Collections
-              <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
+          
+          {/* Image Side (Right) */}
+          <div className="relative h-[50vh] lg:h-auto w-full bg-secondary overflow-hidden group">
+            <Image 
+              src="/images/hero_bangle.png"
+              alt="18K Rose Gold Antique Bangle"
+              fill
+              className="object-cover object-center opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2000ms]"
+              priority
+            />
+            {/* Subtle overlay gradient to blend edges */}
+            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-background via-transparent to-transparent opacity-60"></div>
           </div>
         </div>
       </section>
 
-      {/* Shop by Category */}
-      <section className="py-28 bg-secondary">
+      {/* ═══ 2. Compact Trust Strip ═══ */}
+      <section className="border-b border-border bg-secondary py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:divide-x md:divide-border/60">
+            <div className="flex flex-col items-center justify-center px-4 group">
+              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">12+</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Years Experience</span>
+            </div>
+            <div className="flex flex-col items-center justify-center px-4 group">
+              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">100%</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Handmade</span>
+            </div>
+            <div className="flex flex-col items-center justify-center px-4 group">
+              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">Direct</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Manufacturer</span>
+            </div>
+            <div className="flex flex-col items-center justify-center px-4 group">
+              <span className="text-3xl md:text-4xl font-extrabold font-serif text-foreground mb-1 group-hover:text-primary transition-colors">Antique</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground tracking-[0.2em] uppercase font-semibold">Specialists</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 3. Shop by Category ═══ */}
+      <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold tracking-widest text-foreground uppercase font-serif">Shop by Category</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-widest text-foreground uppercase font-serif">Shop by Category</h2>
             <div className="h-1 w-24 bg-primary mx-auto mt-6"></div>
           </div>
 
@@ -127,7 +133,7 @@ export default async function StoreHomepage() {
                   : '/images/categories/necklaces.png'
 
               return (
-                <Link key={category.id} href={`/products?category=${category.id}`} className="group block relative h-96 overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300">
+                <Link key={category.id} href={`/products?category=${category.id}`} className="group block relative h-[400px] overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300">
                   <Image 
                     src={bgImage} 
                     alt={category.name} 
@@ -146,6 +152,119 @@ export default async function StoreHomepage() {
             })}
           </div>
         </div>
+      </section>
+
+      {/* ═══ 4. Antique Collection Spotlight ═══ */}
+      <section className="bg-black overflow-hidden border-y border-border/50">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px] xl:min-h-[700px]">
+          {/* Text Side (Left on Desktop) */}
+          <div className="flex items-center justify-center p-8 lg:p-16 xl:p-24 order-2 lg:order-1 relative z-10 bg-black">
+            <div className="max-w-xl">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white uppercase font-serif mb-6 leading-[1.1]">
+                The Antique<br />Collection
+              </h2>
+              <div className="h-px w-16 bg-primary mb-8 opacity-70"></div>
+              <p className="text-lg md:text-xl text-white/70 leading-relaxed mb-10 font-light tracking-wide">
+                Heritage-inspired pieces handcrafted using traditional techniques passed down through generations.
+              </p>
+              <Link
+                href="/products"
+                className="inline-block border border-primary text-white hover:bg-primary hover:text-background font-medium py-4 px-10 rounded-sm transition-all text-sm uppercase tracking-widest glow-gold"
+              >
+                Explore Collection
+              </Link>
+            </div>
+          </div>
+          
+          {/* Image Side (Right on Desktop) */}
+          <div className="relative h-[400px] lg:h-auto order-1 lg:order-2 group">
+            <Image 
+              src="/images/antique_spotlight.png" 
+              alt="Antique Collection Spotlight" 
+              fill 
+              className="object-cover object-center transition-transform duration-[2000ms] group-hover:scale-[1.03]"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 5. Crafted By Hand ═══ */}
+      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center bg-black overflow-hidden border-b border-border/50 group">
+        <Image 
+          src="/images/crafted_sketch.png" 
+          alt="Artisan sketching jewellery on workbench" 
+          fill
+          className="object-cover object-center opacity-60 transition-transform duration-[3000ms] group-hover:scale-105"
+        />
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <p className="text-2xl md:text-3xl lg:text-4xl font-serif text-white leading-relaxed font-light tracking-wide mb-12">
+            "Every Nakoda creation begins with a sketch, takes shape in the hands of skilled artisans, and undergoes meticulous finishing before reaching you."
+          </p>
+          <Link
+            href="/about"
+            className="inline-block border border-white/50 text-white hover:bg-white hover:text-black font-medium py-4 px-10 rounded-sm transition-all text-sm uppercase tracking-widest"
+          >
+            Discover Our Story
+          </Link>
+        </div>
+      </section>
+
+      {/* ═══ 5. Featured Products (Most Popular) ═══ */}
+      <section className="py-24 bg-secondary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4">Most Popular</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-widest text-foreground uppercase font-serif">Featured Pieces</h2>
+            <div className="h-1 w-24 bg-primary mx-auto mt-6"></div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+            {popularPieces.length > 0 ? (
+              popularPieces.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    slug: product.slug,
+                    image_url: product.product_images?.[0]?.image_url || null,
+                    image_alt: product.product_images?.[0]?.alt_text || product.name,
+                    category_name: product.categories?.name || null,
+                  }}
+                />
+              ))
+            ) : (
+              <p className="text-center text-muted-foreground col-span-full">New collections arriving soon.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ═══ 8. Wholesale CTA ═══ */}
+      <section className="relative py-28 bg-secondary overflow-hidden border-t border-border">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="h-px w-16 bg-primary mx-auto mb-8" />
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground uppercase font-serif mb-6">
+            Looking for a Wholesale{' '}
+            <span className="text-primary">Jewellery Partner?</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10">
+            We offer direct manufacturing rates, custom designs, and reliable bulk supply for retailers across India.
+          </p>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-primary hover:bg-primary-dark text-background font-medium py-4 px-10 rounded-sm transition-all text-base uppercase tracking-wider glow-gold"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Contact on WhatsApp
+          </a>
+          <div className="h-px w-16 bg-primary mx-auto mt-12" />
+        </div>
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary via-background to-background pointer-events-none" />
       </section>
     </div>
   )

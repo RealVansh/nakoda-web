@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { AddToCartButton } from './AddToCartButton'
 
 interface ProductCardProps {
   product: {
@@ -21,12 +20,12 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const specLabel = [product.purity, product.metal_type].filter(Boolean).join(' ')
+  const metalType = product.metal_type || '18K Rose Gold'
   
   return (
-    <div className="group">
-      <Link href={`/products/${product.slug}`}>
-        <div className="relative aspect-square overflow-hidden bg-secondary mb-4 rounded-sm">
+    <div className="group block h-full">
+      <Link href={`/products/${product.slug}`} className="block h-full flex flex-col">
+        <div className="relative aspect-square overflow-hidden bg-secondary mb-5 rounded-sm border border-transparent group-hover:border-primary/50 group-hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition-all duration-700">
           {product.image_url ? (
             <>
               {/* Primary image */}
@@ -81,33 +80,21 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product info */}
-        <h3 className="text-base font-medium text-foreground leading-snug">{product.name}</h3>
-        
-        <div className="flex items-center gap-2 mt-1.5">
-          {product.category_name && (
-            <span className="text-xs text-muted-foreground">{product.category_name}</span>
-          )}
-          {product.category_name && specLabel && (
-            <span className="text-xs text-border">•</span>
-          )}
-          {specLabel && (
-            <span className="text-xs text-primary font-medium">{specLabel}</span>
-          )}
+        <div className="flex flex-col items-center text-center px-2 flex-grow">
+          <h3 className="text-base font-bold text-foreground font-serif tracking-wide leading-snug">{product.name}</h3>
+          
+          <div className="flex flex-col items-center gap-1 mt-2 mb-4">
+            <span className="text-sm text-muted-foreground">{metalType}</span>
+            <span className="text-xs text-muted-foreground/70 tracking-wider">Weight: ~12.5g</span>
+          </div>
+          
+          <div className="mt-auto pt-2">
+            <span className="inline-block border-b border-primary/40 text-xs uppercase tracking-widest text-primary font-semibold pb-1 opacity-60 group-hover:opacity-100 group-hover:border-primary transition-all duration-300">
+              View Details
+            </span>
+          </div>
         </div>
       </Link>
-
-      <div className="mt-3">
-        <AddToCartButton
-          variant="compact"
-          disabled={product.in_stock === false}
-          product={{
-            id: product.id,
-            name: product.name,
-            slug: product.slug,
-            image_url: product.image_url,
-          }}
-        />
-      </div>
     </div>
   )
 }

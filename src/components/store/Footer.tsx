@@ -51,14 +51,26 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Policies */}
+          {/* Brand Highlights */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground tracking-wider uppercase mb-6">Policies</h3>
+            <h3 className="text-sm font-semibold text-foreground tracking-wider uppercase mb-6">Why Nakoda</h3>
             <ul className="space-y-4">
-              <li><Link href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/shipping" className="text-sm text-muted-foreground hover:text-primary transition-colors">Shipping & Returns</Link></li>
-              <li><Link href="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQs</Link></li>
+              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+                Manufacturers of Handmade Jewellery
+              </li>
+              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+                Wholesale Orders Welcome
+              </li>
+              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+                12+ Years of Experience
+              </li>
+              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+                Antique & Bangle Specialists
+              </li>
             </ul>
           </div>
 
