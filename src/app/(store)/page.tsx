@@ -35,20 +35,34 @@ export default async function StoreHomepage() {
 
   return (
     <div>
-      {/* ═══ 1. Hero Section (50/50 Split) ═══ */}
-      <section className="relative bg-background overflow-hidden border-b border-border min-h-[85vh] lg:min-h-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Text Side (Left) */}
-          <div className="flex flex-col justify-center px-4 sm:px-8 lg:px-16 xl:px-24 py-24 lg:py-32 xl:py-40 relative z-10">
+      {/* ═══ 1. Hero Section (Overlay on Mobile / 50-50 Split on Desktop) ═══ */}
+      <section className="relative bg-background overflow-hidden border-b border-border lg:min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[85vh] lg:min-h-[auto]">
+          
+          {/* Image Side (Background on Mobile, Right Column on Desktop) */}
+          <div className="absolute inset-0 lg:relative lg:h-auto w-full bg-secondary overflow-hidden group lg:order-2 z-0">
+            <Image 
+              src="/images/hero_bangle.png"
+              alt="18K Rose Gold Antique Bangle"
+              fill
+              className="object-cover object-center lg:object-center opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2000ms]"
+              priority
+            />
+            {/* Dark gradient overlay for mobile readability, fades left on desktop */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-black/10 lg:bg-gradient-to-r lg:from-background lg:via-transparent lg:to-transparent lg:opacity-60"></div>
+          </div>
+
+          {/* Text Side (Foreground on Mobile, Left Column on Desktop) */}
+          <div className="flex flex-col justify-end lg:justify-center px-6 sm:px-8 lg:px-16 xl:px-24 pb-16 pt-48 lg:py-32 xl:py-40 relative z-10 lg:order-1 h-full mt-auto lg:mt-0">
             <div className="h-px w-16 bg-primary mb-8 hidden lg:block"></div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground uppercase mb-6 font-serif leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white lg:text-foreground uppercase mb-6 font-serif leading-[1.1]">
               12 Years of <br className="hidden lg:block"/>
               Handmade <span className="text-shimmer">Craftsmanship</span>
             </h1>
-            <h2 className="text-xl md:text-2xl font-serif text-primary mb-8 tracking-wide">
+            <h2 className="text-lg md:text-2xl font-serif text-primary mb-6 lg:mb-8 tracking-wide">
               Bangle Specialists & Antique Manufacturers
             </h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-lg mb-12 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-white/90 lg:text-muted-foreground max-w-lg mb-10 lg:mb-12 leading-relaxed">
               Crafting timeless, intricate jewellery for retailers and discerning customers across India. Authentic. Traditional. Bespoke.
             </p>
             <div>
@@ -61,18 +75,6 @@ export default async function StoreHomepage() {
             </div>
           </div>
           
-          {/* Image Side (Right) */}
-          <div className="relative h-[50vh] lg:h-auto w-full bg-secondary overflow-hidden group">
-            <Image 
-              src="/images/hero_bangle.png"
-              alt="18K Rose Gold Antique Bangle"
-              fill
-              className="object-cover object-center opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2000ms]"
-              priority
-            />
-            {/* Subtle overlay gradient to blend edges */}
-            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-background via-transparent to-transparent opacity-60"></div>
-          </div>
         </div>
       </section>
 
