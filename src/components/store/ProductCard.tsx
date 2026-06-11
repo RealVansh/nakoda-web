@@ -20,7 +20,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const metalType = product.metal_type || '18K Rose Gold'
+  const specLabel = [product.purity, product.metal_type].filter(Boolean).join(' ')
   
   return (
     <div className="group block h-full">
@@ -83,10 +83,19 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex flex-col items-center text-center px-2 flex-grow">
           <h3 className="text-base font-bold text-foreground font-serif tracking-wide leading-snug">{product.name}</h3>
           
-          <div className="flex flex-col items-center gap-1 mt-2 mb-4">
-            <span className="text-sm text-muted-foreground">{metalType}</span>
-            <span className="text-xs text-muted-foreground/70 tracking-wider">Weight: ~12.5g</span>
-          </div>
+          {(product.category_name || specLabel) && (
+            <div className="flex items-center gap-2 mt-2 mb-4">
+              {product.category_name && (
+                <span className="text-sm text-muted-foreground">{product.category_name}</span>
+              )}
+              {product.category_name && specLabel && (
+                <span className="text-xs text-border">•</span>
+              )}
+              {specLabel && (
+                <span className="text-sm text-primary font-medium">{specLabel}</span>
+              )}
+            </div>
+          )}
           
           <div className="mt-auto pt-2">
             <span className="inline-block border-b border-primary/40 text-xs uppercase tracking-widest text-primary font-semibold pb-1 opacity-60 group-hover:opacity-100 group-hover:border-primary transition-all duration-300">

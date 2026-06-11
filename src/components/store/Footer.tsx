@@ -13,7 +13,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-1">
             <span className="text-xl font-extrabold tracking-widest text-primary uppercase">Nakoda</span>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Exquisite jewellery crafted with precision and passion. Discover our timeless collections of gold, diamond, and silver masterpieces.
+              Handcrafted gold jewellery with 12+ years of heritage. From antique pieces to modern designs, every creation is made with precision and passion.
             </p>
             <div className="mt-6 flex gap-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">

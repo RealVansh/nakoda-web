@@ -4,7 +4,7 @@ import { ProductCard } from '@/components/store/ProductCard'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Factory, Sparkles, Hammer, Clock, MessageCircle } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 
 export const revalidate = 60 // ISR cache for 60 seconds
 
@@ -56,14 +56,14 @@ export default async function StoreHomepage() {
           <div className="flex flex-col justify-end lg:justify-center px-6 sm:px-8 lg:px-16 xl:px-24 pb-16 pt-48 lg:py-32 xl:py-40 relative z-10 lg:order-1 h-full mt-auto lg:mt-0">
             <div className="h-px w-16 bg-primary mb-8 hidden lg:block"></div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white lg:text-foreground uppercase mb-6 font-serif leading-[1.1]">
-              12 Years of <br className="hidden lg:block"/>
-              Handmade <span className="text-shimmer">Craftsmanship</span>
+              Handcrafted Jewellery, <br className="hidden lg:block"/>
+              Timeless <span className="text-shimmer">Elegance</span>
             </h1>
             <h2 className="text-lg md:text-2xl font-serif text-primary mb-6 lg:mb-8 tracking-wide">
-              Exquisite Gold & Antique Jewellery
+              Exquisite Gold Jewellery for Every Occasion
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-white/90 lg:text-muted-foreground max-w-lg mb-10 lg:mb-12 leading-relaxed">
-              Crafting timeless, intricate pieces for every occasion. From bespoke bridal wear to everyday elegance. Authentic. Traditional. Bespoke.
+              From bespoke bridal wear to everyday elegance — crafted with precision, passion, and 12+ years of heritage. Authentic. Traditional. Bespoke.
             </p>
             <div>
               <Link
@@ -81,7 +81,7 @@ export default async function StoreHomepage() {
 
 
       {/* ═══ 3. Shop by Category ═══ */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background animate-fade-in-up">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-widest text-foreground uppercase font-serif">Shop by Category</h2>
@@ -135,7 +135,7 @@ export default async function StoreHomepage() {
       </section>
 
       {/* ═══ 4. Antique Collection Spotlight ═══ */}
-      <section className="bg-black overflow-hidden border-y border-border/50">
+      <section className="bg-black overflow-hidden border-y border-border/50 animate-fade-in-up">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px] xl:min-h-[700px]">
           {/* Text Side (Left on Desktop) */}
           <div className="flex items-center justify-center p-8 lg:p-16 xl:p-24 order-2 lg:order-1 relative z-10 bg-black">
@@ -169,7 +169,7 @@ export default async function StoreHomepage() {
       </section>
 
       {/* ═══ 5. Crafted By Hand ═══ */}
-      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center bg-black overflow-hidden border-b border-border/50 group">
+      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center bg-black overflow-hidden border-b border-border/50 group animate-fade-in-up">
         <Image 
           src="/images/crafted_sketch.png" 
           alt="Artisan sketching jewellery on workbench" 
@@ -191,7 +191,7 @@ export default async function StoreHomepage() {
       </section>
 
       {/* ═══ 5. Featured Products (Most Popular) ═══ */}
-      <section className="py-24 bg-secondary">
+      <section className="py-24 bg-secondary animate-fade-in-up">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4">Most Popular</p>
@@ -217,6 +217,15 @@ export default async function StoreHomepage() {
             ) : (
               <p className="text-center text-muted-foreground col-span-full">New collections arriving soon.</p>
             )}
+          </div>
+
+          <div className="text-center mt-14">
+            <Link
+              href="/products"
+              className="inline-block border border-primary/50 text-primary hover:bg-primary hover:text-background font-medium py-3 px-10 rounded-sm transition-all text-sm uppercase tracking-widest glow-gold"
+            >
+              View All Collections
+            </Link>
           </div>
         </div>
       </section>
