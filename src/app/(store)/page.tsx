@@ -199,9 +199,27 @@ export default async function StoreHomepage() {
             <div className="h-1 w-24 bg-primary mx-auto mt-6"></div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-            {popularPieces.length > 0 ? (
-              popularPieces.map((product) => (
+          {popularPieces.length === 1 ? (
+            /* Single product — centered hero-style card */
+            <div className="max-w-sm mx-auto">
+              <ProductCard
+                product={{
+                  id: popularPieces[0].id,
+                  name: popularPieces[0].name,
+                  slug: popularPieces[0].slug,
+                  image_url: popularPieces[0].product_images?.[0]?.image_url || null,
+                  image_alt: popularPieces[0].product_images?.[0]?.alt_text || popularPieces[0].name,
+                  category_name: popularPieces[0].categories?.name || null,
+                }}
+              />
+            </div>
+          ) : popularPieces.length > 0 ? (
+            <div className={`grid gap-x-8 gap-y-12 ${
+              popularPieces.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto' :
+              popularPieces.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto' :
+              'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+            }`}>
+              {popularPieces.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={{
@@ -213,11 +231,11 @@ export default async function StoreHomepage() {
                     category_name: product.categories?.name || null,
                   }}
                 />
-              ))
-            ) : (
-              <p className="text-center text-muted-foreground col-span-full">New collections arriving soon.</p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground">New collections arriving soon.</p>
+          )}
 
           <div className="text-center mt-14">
             <Link
@@ -232,7 +250,7 @@ export default async function StoreHomepage() {
 
 
       {/* ═══ 8. Wholesale CTA ═══ */}
-      <section className="relative py-28 bg-secondary overflow-hidden border-t border-border">
+      <section className="relative py-28 bg-background overflow-hidden border-t border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="h-px w-16 bg-primary mx-auto mb-8" />
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground uppercase font-serif mb-6">

@@ -81,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Product info */}
         <div className="flex flex-col items-center text-center px-2 flex-grow">
-          <h3 className="text-base font-bold text-foreground font-serif tracking-wide leading-snug">{product.name}</h3>
+          <h3 className="text-base font-bold text-foreground font-serif tracking-wide leading-snug capitalize">{product.name}</h3>
           
           {(product.category_name || specLabel) && (
             <div className="flex items-center gap-2 mt-2 mb-4">
