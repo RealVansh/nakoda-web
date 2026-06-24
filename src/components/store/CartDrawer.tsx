@@ -84,19 +84,19 @@ export function CartDrawer() {
                 {items.map((item) => (
                   <li
                     key={item.id}
-                    className="flex gap-4 p-3 rounded-lg border border-border hover:border-primary/20 transition-colors"
+                    className="flex items-center gap-4 p-3 rounded-lg border border-border hover:border-primary/20 transition-colors"
                   >
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={() => setIsCartOpen(false)}
-                      className="relative w-24 h-24 flex-shrink-0 bg-secondary rounded-md overflow-hidden"
+                      className="relative w-16 h-16 flex-shrink-0 bg-secondary rounded-md overflow-hidden"
                     >
                       {item.image_url ? (
                         <Image
                           src={item.image_url}
                           alt={item.name}
                           fill
-                          sizes="96px"
+                          sizes="64px"
                           className="object-cover"
                         />
                       ) : (
