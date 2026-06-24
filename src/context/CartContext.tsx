@@ -10,6 +10,7 @@ export type CartItem = {
   category_name?: string | null
   metal_type?: string | null
   purity?: string | null
+  weight?: number | null
 }
 
 type CartContextType = {

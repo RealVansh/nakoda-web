@@ -219,6 +219,10 @@ export default async function ProductDetailPage({
                 name: product.name,
                 slug: product.slug,
                 image_url: product.product_images?.[0]?.image_url || null,
+                category_name: product.categories?.name,
+                metal_type: product.metal_type,
+                purity: product.purity,
+                weight: product.weight_grams,
               }}
             />
             <a 

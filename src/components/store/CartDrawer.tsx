@@ -17,7 +17,11 @@ export function CartDrawer() {
 
     let message = "Hi, I'm interested in the following products:\n\n"
     items.forEach((item, index) => {
-      message += `${index + 1}. ${item.name}\n   ${siteUrl}/products/${item.slug}\n\n`
+      const details = []
+      if (item.weight) details.push(`${item.weight}g`)
+      if (item.purity) details.push(item.purity)
+      const detailsStr = details.length > 0 ? ` (${details.join(', ')})` : ''
+      message += `${index + 1}. ${item.name}${detailsStr}\n   ${siteUrl}/products/${item.slug}\n\n`
     })
     message += 'Please share pricing and availability details.'
 
@@ -109,9 +113,13 @@ export function CartDrawer() {
                       >
                         {item.name}
                       </Link>
-                      {(item.category_name || item.purity || item.metal_type) && (
+                      {(item.category_name || item.purity || item.metal_type || item.weight) && (
                         <p className="text-xs text-muted-foreground mt-1">
-                          {[item.category_name, [item.purity, item.metal_type].filter(Boolean).join(' ')].filter(Boolean).join(' • ')}
+                          {[
+                            item.category_name, 
+                            [item.purity, item.metal_type].filter(Boolean).join(' '),
+                            item.weight ? `${item.weight}g` : null
+                          ].filter(Boolean).join(' • ')}
                         </p>
                       )}
                     </div>
