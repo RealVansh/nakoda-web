@@ -123,16 +123,16 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
 
       {/* Mobile Nav Backdrop */}
       <div 
-        className={`md:hidden fixed inset-0 top-20 bg-black/40 z-40 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`md:hidden fixed inset-0 top-20 bg-black/40 z-40 transition-all duration-300 ${
+          isOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
         }`}
         onClick={() => setIsOpen(false)}
       />
 
       {/* Mobile Nav Menu */}
       <div 
-        className={`md:hidden fixed top-20 left-0 w-full max-w-sm h-[calc(100vh-5rem)] bg-background border-r border-border shadow-lg z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`md:hidden fixed top-20 left-0 w-full max-w-sm h-[calc(100vh-5rem)] bg-background border-r border-border shadow-lg z-50 overflow-y-auto transform transition-all duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 visible' : '-translate-x-full invisible'
         }`}
       >
         <div className="px-2 pt-2 pb-6 space-y-1 sm:px-3 h-full flex flex-col">

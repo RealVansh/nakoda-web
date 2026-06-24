@@ -28,16 +28,16 @@ export function CartDrawer() {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/40 z-[60] transition-opacity duration-300 ${
-          isCartOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 bg-black/40 z-[60] transition-all duration-300 ${
+          isCartOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
         }`}
         onClick={() => setIsCartOpen(false)}
       />
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-background shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-background shadow-2xl z-[70] transform transition-all duration-300 ease-in-out ${
+          isCartOpen ? 'translate-x-0 visible' : 'translate-x-full invisible'
         }`}
       >
         <div className="flex flex-col h-full">

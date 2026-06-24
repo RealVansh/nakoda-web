@@ -95,7 +95,7 @@ export default async function ProductsPage({
       </div>
 
       {/* Layout: Sidebar + Grid */}
-      <div className="flex gap-12">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
         {/* Filter Sidebar */}
         <Suspense fallback={null}>
           <ProductFilters
