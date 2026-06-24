@@ -249,16 +249,16 @@ export function ProductFilters({ categories, collections, activeFilters }: Produ
         </div>
       </aside>
 
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden mb-6">
+      {/* Mobile Floating Filter Toggle */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[45]">
         <button
           onClick={() => setMobileOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 border border-border rounded-lg text-sm font-medium text-foreground hover:border-primary transition-colors w-full justify-center"
+          className="flex items-center gap-2 px-6 py-3 bg-background border border-border/80 shadow-[0_8px_30px_rgb(0,0,0,0.4)] rounded-full text-sm font-bold text-foreground hover:border-primary transition-all active:scale-95"
         >
           <SlidersHorizontal className="h-4 w-4" />
-          Filters & Sort
+          FILTERS
           {hasAnyFilter && (
-            <span className="bg-primary text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="bg-primary text-background text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center ml-1">
               {activeFilterCount}
             </span>
           )}

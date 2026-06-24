@@ -107,9 +107,9 @@ export function SearchOverlay() {
             onClick={close}
           />
 
-          {/* Search Panel */}
-          <div className="fixed top-0 left-0 right-0 z-[90] bg-background border-b border-border shadow-2xl">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+          {/* Search Panel - Command Palette Style */}
+          <div className="fixed top-4 left-4 right-4 sm:top-[15vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[640px] z-[90] bg-background border border-border/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="px-4 sm:px-6 py-5 shrink-0">
               {/* Input Row */}
               <div className="flex items-center gap-4">
                 <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
@@ -133,11 +133,11 @@ export function SearchOverlay() {
 
               {/* Results */}
               {query.trim().length >= 2 && (
-                <div className="mt-6 border-t border-border pt-4">
+                <div className="border-t border-border/50 overflow-y-auto bg-secondary/20">
                   {isLoading ? (
-                    <div className="flex items-center gap-3 py-4">
+                    <div className="flex items-center gap-3 px-6 py-8">
                       <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      <span className="text-sm text-muted-foreground">Searching...</span>
+                      <span className="text-sm text-muted-foreground">Searching collections...</span>
                     </div>
                   ) : results.length > 0 ? (
                     <ul className="space-y-1">
@@ -191,9 +191,13 @@ export function SearchOverlay() {
                       </li>
                     </ul>
                   ) : (
-                    <p className="text-sm text-muted-foreground py-4">
-                      No products found for &ldquo;{query}&rdquo;
-                    </p>
+                    <div className="px-6 py-12 text-center">
+                      <Search className="w-8 h-8 text-muted-foreground/30 mx-auto mb-4" />
+                      <p className="text-base font-medium text-foreground mb-1">No pieces found</p>
+                      <p className="text-sm text-muted-foreground">
+                        We couldn&apos;t find anything for &ldquo;{query}&rdquo;
+                      </p>
+                    </div>
                   )}
                 </div>
               )}

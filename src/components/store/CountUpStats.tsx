@@ -80,7 +80,7 @@ export function CountUpStats({ stats }: { stats: StatItem[] }) {
         const numericMatch = stat.value.match(/^(\d+)(.*)$/)
 
         return (
-          <div key={stat.label} className="flex items-center">
+          <div key={stat.label} className="flex flex-col sm:flex-row items-center">
             {/* Stat content */}
             <div className="text-center px-10 md:px-16 py-8 sm:py-4">
               <div className="text-5xl md:text-6xl font-light text-primary mb-5 tracking-tight">
