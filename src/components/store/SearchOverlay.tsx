@@ -107,101 +107,125 @@ export function SearchOverlay() {
             onClick={close}
           />
 
-          {/* Search Panel - Command Palette Style */}
-          <div className="fixed top-4 left-4 right-4 sm:top-[15vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[640px] z-[90] bg-background border border-border/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div className="px-4 sm:px-6 py-5 shrink-0">
-              {/* Input Row */}
-              <div className="flex items-center gap-4">
-                <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+          {/* Search Panel - Edge to Edge Luxury Dropdown */}
+          <div className="fixed top-0 left-0 right-0 z-[90] bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-2xl flex flex-col max-h-[85vh] animate-in slide-in-from-top-4 duration-300">
+            <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 sm:py-12 shrink-0 relative">
+              {/* Close Button */}
+              <button
+                onClick={close}
+                className="absolute right-4 top-4 sm:right-6 sm:top-6 p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer rounded-full hover:bg-secondary/50"
+                aria-label="Close search"
+              >
+                <X className="h-6 w-6" />
+              </button>
+
+              {/* Heading */}
+              <div className="text-center mb-8">
+                <h2 className="text-xs uppercase tracking-[0.3em] text-primary font-medium mb-3">Search</h2>
+                <p className="text-2xl sm:text-3xl font-serif text-foreground tracking-wide">What are you looking for?</p>
+              </div>
+
+              {/* Input Row - Pill Design */}
+              <div className="flex items-center gap-4 bg-secondary/80 border border-border/80 rounded-full px-6 py-4 max-w-2xl mx-auto focus-within:border-primary/60 focus-within:shadow-[0_0_15px_rgba(212,175,55,0.15)] transition-all duration-300">
+                <Search className="h-5 w-5 text-primary flex-shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
                   value={query}
                   onChange={(e) => handleInputChange(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Search for products, categories..."
-                  className="flex-1 bg-transparent text-foreground text-lg font-light outline-none placeholder:text-muted-foreground/50 font-sans"
+                  placeholder="e.g. Antique Bangles, Rose Gold Rings..."
+                  className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground text-base sm:text-lg outline-none placeholder:text-muted-foreground/40 font-sans"
+                  style={{ outline: 'none', boxShadow: 'none' }}
                 />
-                <button
-                  onClick={close}
-                  className="p-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                  aria-label="Close search"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+                {query.length > 0 && (
+                  <button
+                    onClick={() => { setQuery(''); setResults([]) }}
+                    className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
               </div>
+            </div>
 
-              {/* Results */}
-              {query.trim().length >= 2 && (
-                <div className="border-t border-border/50 overflow-y-auto bg-secondary/20">
+            {/* Results Area */}
+            {query.trim().length >= 2 && (
+              <div className="border-t border-border/30 overflow-y-auto w-full">
+                <div className="max-w-3xl mx-auto w-full px-4 sm:px-6 py-8">
                   {isLoading ? (
-                    <div className="flex items-center gap-3 px-6 py-8">
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      <span className="text-sm text-muted-foreground">Searching collections...</span>
+                    <div className="flex flex-col items-center justify-center gap-4 py-12">
+                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      <span className="text-sm text-muted-foreground tracking-widest uppercase">Searching collections...</span>
                     </div>
                   ) : results.length > 0 ? (
-                    <ul className="space-y-1">
+                    <ul className="space-y-2">
                       {results.map((product, index) => (
                         <li key={product.id}>
                           <Link
                             href={`/products/${product.slug}`}
                             onClick={close}
-                            className={`flex items-center gap-4 p-3 rounded-md transition-colors ${
+                            className={`flex items-center gap-5 p-3 rounded-md transition-all duration-300 ${
                               index === activeIndex
-                                ? 'bg-secondary'
-                                : 'hover:bg-secondary'
+                                ? 'bg-secondary border-primary/20'
+                                : 'hover:bg-secondary border border-transparent hover:border-border/50'
                             }`}
                           >
-                            <div className="relative w-12 h-12 bg-secondary rounded-sm overflow-hidden flex-shrink-0">
+                            <div className="relative w-16 h-16 bg-background rounded-sm overflow-hidden flex-shrink-0 border border-border">
                               {product.product_images?.[0]?.image_url ? (
                                 <Image
                                   src={product.product_images[0].image_url}
                                   alt={product.name}
                                   fill
-                                  sizes="48px"
+                                  sizes="64px"
                                   className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-muted-foreground/30">
-                                  <Search className="w-4 h-4" />
+                                  <Search className="w-5 h-5" />
                                 </div>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground capitalize truncate">
+                              <p className="text-base font-serif font-bold text-foreground capitalize tracking-wide">
                                 {product.name}
                               </p>
                               {product.categories?.name && (
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
+                                <p className="text-xs text-primary uppercase tracking-[0.2em] mt-1">
                                   {product.categories.name}
                                 </p>
                               )}
                             </div>
+                            <div className="hidden sm:block text-muted-foreground group-hover:text-primary transition-colors pr-2">
+                              <span className="text-xs uppercase tracking-widest border-b border-primary/30 pb-0.5">View</span>
+                            </div>
                           </Link>
                         </li>
                       ))}
-                      <li className="pt-2 border-t border-border mt-2">
+                      <li className="pt-6 mt-4 border-t border-border/50 text-center">
                         <Link
                           href={`/products?search=${encodeURIComponent(query)}`}
                           onClick={close}
-                          className="block text-center text-sm text-primary hover:text-primary-dark py-2 font-medium transition-colors"
+                          className="inline-block text-xs text-primary hover:text-background hover:bg-primary border border-primary px-8 py-3 uppercase tracking-[0.2em] transition-all duration-300"
                         >
                           View all results for &ldquo;{query}&rdquo;
                         </Link>
                       </li>
                     </ul>
                   ) : (
-                    <div className="px-6 py-12 text-center">
-                      <Search className="w-8 h-8 text-muted-foreground/30 mx-auto mb-4" />
-                      <p className="text-base font-medium text-foreground mb-1">No pieces found</p>
+                    <div className="px-6 py-16 text-center">
+                      <div className="w-16 h-16 rounded-full border border-border/50 flex items-center justify-center mx-auto mb-6">
+                        <Search className="w-6 h-6 text-muted-foreground/50" />
+                      </div>
+                      <p className="text-xl font-serif text-foreground tracking-wide mb-2">No pieces found</p>
                       <p className="text-sm text-muted-foreground">
-                        We couldn&apos;t find anything for &ldquo;{query}&rdquo;
+                        We couldn&apos;t find anything for &ldquo;{query}&rdquo;. Try another term or browse our collections.
                       </p>
                     </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </>
       )}
