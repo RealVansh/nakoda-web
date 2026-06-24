@@ -1,12 +1,15 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, useSyncExternalStore, type ReactNode } from 'react'
+import { createContext, useContext, useCallback, useSyncExternalStore, useState, type ReactNode } from 'react'
 
 export type CartItem = {
   id: string
   name: string
   slug: string
   image_url: string | null
+  category_name?: string | null
+  metal_type?: string | null
+  purity?: string | null
 }
 
 type CartContextType = {
@@ -27,7 +30,12 @@ const CART_STORAGE_KEY = 'nakoda_cart'
 // Storage subscription for useSyncExternalStore
 function subscribe(callback: () => void) {
   window.addEventListener('storage', callback)
-  return () => window.removeEventListener('storage', callback)
+  // Also listen for custom events so same-tab updates are caught
+  window.addEventListener('nakoda-cart-update', callback)
+  return () => {
+    window.removeEventListener('storage', callback)
+    window.removeEventListener('nakoda-cart-update', callback)
+  }
 }
 
 function getSnapshot() {
@@ -48,32 +56,28 @@ function parseCart(raw: string): CartItem[] {
 
 function persistCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+  // Dispatch custom event so same-tab useSyncExternalStore picks it up
+  window.dispatchEvent(new Event('nakoda-cart-update'))
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  // Single source of truth: localStorage via useSyncExternalStore
   const stored = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-  const [items, setItems] = useState<CartItem[]>(() => parseCart(stored))
+  const items = parseCart(stored)
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   const addToCart = useCallback((item: CartItem) => {
-    setItems(prev => {
-      if (prev.some(i => i.id === item.id)) return prev
-      const next = [...prev, item]
-      persistCart(next)
-      return next
-    })
+    const current = parseCart(localStorage.getItem(CART_STORAGE_KEY) || '[]')
+    if (current.some(i => i.id === item.id)) return
+    persistCart([...current, item])
   }, [])
 
   const removeFromCart = useCallback((id: string) => {
-    setItems(prev => {
-      const next = prev.filter(i => i.id !== id)
-      persistCart(next)
-      return next
-    })
+    const current = parseCart(localStorage.getItem(CART_STORAGE_KEY) || '[]')
+    persistCart(current.filter(i => i.id !== id))
   }, [])
 
   const clearCart = useCallback(() => {
-    setItems([])
     persistCart([])
   }, [])
 

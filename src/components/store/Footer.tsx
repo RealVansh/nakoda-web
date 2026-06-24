@@ -12,8 +12,10 @@ export function Footer() {
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-1">
             <span className="text-xl font-extrabold tracking-widest text-primary uppercase">Nakoda</span>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Handcrafted gold jewellery with 12+ years of heritage. From antique pieces to modern designs, every creation is made with precision and passion.
+            {/* Brand Confidence tagline */}
+            <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+              Bangle Specialists & Antique Manufacturers.<br />
+              Crafting heritage-inspired jewellery since 2013.
             </p>
             <div className="mt-6 flex gap-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">

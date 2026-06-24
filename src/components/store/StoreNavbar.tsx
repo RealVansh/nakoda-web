@@ -1,21 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
+import { SearchOverlay } from '@/components/store/SearchOverlay'
 
 export function StoreNavbar({ categories }: { categories: { id: string; name: string }[] }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const { cartCount, setIsCartOpen } = useCart()
   const pathname = usePathname()
 
   const isActive = (path: string) => pathname === path
 
+  // Frosted glass effect on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-50">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg shadow-black/5'
+          : 'bg-background border-b border-border'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex justify-start items-center">
@@ -39,7 +56,7 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
                 aria-haspopup="true"
                 aria-expanded={isDropdownOpen}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="text-foreground hover:text-primary transition-colors text-sm font-medium flex items-center"
+                className="text-foreground hover:text-primary transition-colors text-sm font-medium flex items-center cursor-pointer"
               >
                 Categories
               </button>
@@ -60,10 +77,13 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
             <Link href="/about" className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>About</Link>
             <Link href="/contact" className={`text-sm font-medium transition-colors ${isActive('/contact') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>Contact Us</Link>
 
+            {/* Search */}
+            <SearchOverlay />
+
             {/* Cart Icon */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-foreground hover:text-primary transition-colors"
+              className="relative p-2 text-foreground hover:text-primary transition-colors cursor-pointer"
               aria-label="Open cart"
             >
               <ShoppingBag className="h-5 w-5" />
@@ -75,11 +95,12 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
             </button>
           </nav>
 
-          {/* Mobile: Cart + Menu */}
-          <div className="md:hidden flex items-center gap-2">
+          {/* Mobile: Search + Cart + Menu */}
+          <div className="md:hidden flex items-center gap-1">
+            <SearchOverlay />
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-foreground hover:text-primary transition-colors"
+              className="relative p-2 text-foreground hover:text-primary transition-colors cursor-pointer"
               aria-label="Open cart"
             >
               <ShoppingBag className="h-5 w-5" />
@@ -91,7 +112,7 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground hover:text-primary focus:outline-none"
+              className="text-foreground hover:text-primary focus:outline-none cursor-pointer"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

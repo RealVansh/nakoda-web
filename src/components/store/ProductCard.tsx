@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                 className={`object-cover object-center transition-all duration-500 ${
-                  product.image_url_2 ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+                  product.image_url_2 ? 'group-hover:opacity-0' : 'group-hover:scale-[1.03]'
                 }`}
               />
               {/* Second image on hover */}

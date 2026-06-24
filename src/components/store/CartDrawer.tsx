@@ -85,14 +85,14 @@ export function CartDrawer() {
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={() => setIsCartOpen(false)}
-                      className="relative w-20 h-20 flex-shrink-0 bg-secondary rounded-md overflow-hidden"
+                      className="relative w-24 h-24 flex-shrink-0 bg-secondary rounded-md overflow-hidden"
                     >
                       {item.image_url ? (
                         <Image
                           src={item.image_url}
                           alt={item.name}
                           fill
-                          sizes="80px"
+                          sizes="96px"
                           className="object-cover"
                         />
                       ) : (
@@ -105,10 +105,15 @@ export function CartDrawer() {
                       <Link
                         href={`/products/${item.slug}`}
                         onClick={() => setIsCartOpen(false)}
-                        className="text-sm font-medium text-foreground hover:text-primary transition-colors line-clamp-2"
+                        className="text-sm font-semibold text-foreground hover:text-primary transition-colors line-clamp-2 font-serif capitalize"
                       >
                         {item.name}
                       </Link>
+                      {(item.category_name || item.purity || item.metal_type) && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {[item.category_name, [item.purity, item.metal_type].filter(Boolean).join(' ')].filter(Boolean).join(' • ')}
+                        </p>
+                      )}
                     </div>
                     <button
                       onClick={() => removeFromCart(item.id)}
