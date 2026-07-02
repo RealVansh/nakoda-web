@@ -25,10 +25,26 @@ export const metadata: Metadata = {
 }
 
 export default async function StoreHomepage() {
-  const [featuredProducts, categories] = await Promise.all([
+  const [featuredProducts, rawCategories] = await Promise.all([
     getFeaturedProducts(),
     getCategories()
   ])
+
+  // Custom sort: Bangles -> Necklaces -> Rings -> Earrings -> Others
+  const targetOrder = ['bangle', 'necklace', 'ring', 'earring']
+  const categories = [...rawCategories].sort((a, b) => {
+    const aName = a.name.toLowerCase()
+    const bName = b.name.toLowerCase()
+    
+    let aIndex = targetOrder.findIndex(keyword => aName.includes(keyword))
+    let bIndex = targetOrder.findIndex(keyword => bName.includes(keyword))
+    
+    if (aIndex === -1) aIndex = 99
+    if (bIndex === -1) bIndex = 99
+    
+    if (aIndex !== bIndex) return aIndex - bIndex
+    return a.name.localeCompare(b.name) // Sort alphabetically if they are both "others"
+  })
 
   const showcaseProducts = featuredProducts.slice(-6).map((p) => ({
     id: p.id,
@@ -144,26 +160,81 @@ export default async function StoreHomepage() {
             <div className="h-1 w-24 bg-primary mx-auto mt-6"></div>
           </MotionSection>
 
-          <MotionSection stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
-            {categories.map((category) => (
-              <MotionItem key={category.id}>
-                <Link href={`/products?category=${category.id}`} className="group block relative h-[220px] sm:h-[250px] overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300 cursor-pointer">
+          <MotionSection stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {/* 1. Hero Category (Left) */}
+            {categories[0] && (
+              <MotionItem className="md:col-span-1 lg:col-span-2 md:row-span-2 h-[350px] md:h-full min-h-[400px]">
+                <Link href={`/products?category=${categories[0].id}`} className="group block relative w-full h-full overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300 cursor-pointer">
                   <Image 
-                    src={getCategoryImage(category.name)} 
-                    alt={category.name} 
+                    src={getCategoryImage(categories[0].name)} 
+                    alt={categories[0].name} 
+                    fill 
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                  <div className="absolute bottom-0 left-0 p-8 z-20">
+                    <h3 className="text-3xl lg:text-4xl font-bold text-white uppercase tracking-widest font-serif mb-2">
+                      {categories[0].name}
+                    </h3>
+                    <span className="text-primary text-sm uppercase tracking-wider font-medium flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300">
+                      Explore Collection <span aria-hidden="true">&rarr;</span>
+                    </span>
+                  </div>
+                </Link>
+              </MotionItem>
+            )}
+
+            {/* 2. Top Right Category */}
+            {categories[1] && (
+              <MotionItem className="h-[250px] lg:h-[300px]">
+                <Link href={`/products?category=${categories[1].id}`} className="group block relative w-full h-full overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300 cursor-pointer">
+                  <Image 
+                    src={getCategoryImage(categories[1].name)} 
+                    alt={categories[1].name} 
                     fill 
                     className="object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10" />
                   <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <h3 className="text-base sm:text-lg font-bold text-white border border-primary/50 px-5 py-2.5 sm:px-6 sm:py-3 uppercase tracking-widest backdrop-blur-sm bg-black/30 group-hover:bg-primary group-hover:text-background group-hover:border-primary transition-all duration-300">
-                      {category.name}
+                    <h3 className="text-lg sm:text-xl font-bold text-white border border-primary/50 px-6 py-3 uppercase tracking-widest backdrop-blur-sm bg-black/30 group-hover:bg-primary group-hover:text-background group-hover:border-primary transition-all duration-300">
+                      {categories[1].name}
                     </h3>
                   </div>
                 </Link>
               </MotionItem>
-            ))}
+            )}
+
+            {/* 3. Bottom Right Category */}
+            {categories[2] && (
+              <MotionItem className="h-[250px] lg:h-[300px]">
+                <Link href={`/products?category=${categories[2].id}`} className="group block relative w-full h-full overflow-hidden border border-border hover:border-primary/60 transition-colors duration-300 cursor-pointer">
+                  <Image 
+                    src={getCategoryImage(categories[2].name)} 
+                    alt={categories[2].name} 
+                    fill 
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10" />
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <h3 className="text-lg sm:text-xl font-bold text-white border border-primary/50 px-6 py-3 uppercase tracking-widest backdrop-blur-sm bg-black/30 group-hover:bg-primary group-hover:text-background group-hover:border-primary transition-all duration-300">
+                      {categories[2].name}
+                    </h3>
+                  </div>
+                </Link>
+              </MotionItem>
+            )}
           </MotionSection>
+
+          {categories.length > 3 && (
+            <MotionSection className="text-center mt-12 lg:mt-16">
+              <Link
+                href="/products"
+                className="inline-block border border-primary/50 text-primary hover:bg-primary hover:text-background font-medium py-3 px-10 rounded-sm transition-all text-sm uppercase tracking-widest glow-gold btn-gold-sweep cursor-pointer"
+              >
+                View All Jewellery
+              </Link>
+            </MotionSection>
+          )}
         </div>
       </section>
 

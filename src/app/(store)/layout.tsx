@@ -6,7 +6,23 @@ import { CartProvider } from '@/context/CartContext'
 import { CartDrawer } from '@/components/store/CartDrawer'
 
 export default async function StoreLayout({ children }: { children: ReactNode }) {
-  const categories = await getCategories()
+  const rawCategories = await getCategories()
+  
+  // Custom sort: Bangles -> Necklaces -> Rings -> Earrings -> Others
+  const targetOrder = ['bangle', 'necklace', 'ring', 'earring']
+  const categories = [...rawCategories].sort((a, b) => {
+    const aName = a.name.toLowerCase()
+    const bName = b.name.toLowerCase()
+    
+    let aIndex = targetOrder.findIndex(keyword => aName.includes(keyword))
+    let bIndex = targetOrder.findIndex(keyword => bName.includes(keyword))
+    
+    if (aIndex === -1) aIndex = 99
+    if (bIndex === -1) bIndex = 99
+    
+    if (aIndex !== bIndex) return aIndex - bIndex
+    return a.name.localeCompare(b.name)
+  })
 
   return (
     <CartProvider>
