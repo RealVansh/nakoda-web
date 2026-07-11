@@ -75,6 +75,6 @@ export const getCategories = unstable_cache(
       return []
     }
   },
-  ['categories-list'],
+  ['categories-list-v2'],
   { tags: ['categories'] }
 )

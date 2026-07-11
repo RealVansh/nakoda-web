@@ -255,7 +255,7 @@ export const getProducts = unstable_cache(
       return []
     }
   },
-  ['products-list'],
+  ['products-list-v2'],
   { tags: ['products'] }
 )
 
@@ -284,7 +284,7 @@ export const getPaginatedProducts = unstable_cache(
       return { products: [], total: 0, pages: 0 }
     }
   },
-  ['products-paginated'],
+  ['products-paginated-v2'],
   { tags: ['products'] }
 )
 
@@ -328,7 +328,7 @@ export const getProductBySlug = unstable_cache(
       return null
     }
   },
-  ['product-by-slug'],
+  ['product-by-slug-v2'],
   { tags: ['products'] }
 )
 
@@ -342,7 +342,7 @@ export const getFeaturedProducts = unstable_cache(
       return []
     }
   },
-  ['products-featured'],
+  ['products-featured-v2'],
   { tags: ['products'] }
 )
 
@@ -359,7 +359,7 @@ export const getNewArrivals = unstable_cache(
       return []
     }
   },
-  ['products-new-arrivals'],
+  ['products-new-arrivals-v2'],
   { tags: ['products'] }
 )
 
@@ -379,7 +379,7 @@ export const getRelatedProducts = unstable_cache(
       return []
     }
   },
-  ['products-related'],
+  ['products-related-v2'],
   { tags: ['products'] }
 )
 
@@ -405,7 +405,7 @@ export const getProductSlugs = unstable_cache(
       return []
     }
   },
-  ['product-slugs'],
+  ['product-slugs-v2'],
   { tags: ['products'] }
 )
 

@@ -77,6 +77,6 @@ export const getCollections = unstable_cache(
       return []
     }
   },
-  ['collections-list'],
+  ['collections-list-v2'],
   { tags: ['collections'] }
 )
