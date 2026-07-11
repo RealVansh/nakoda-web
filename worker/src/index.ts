@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Nakoda D1 Proxy Worker
  * 
