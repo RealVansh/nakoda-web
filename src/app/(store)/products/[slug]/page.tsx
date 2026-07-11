@@ -9,6 +9,15 @@ import { RelatedProducts } from '@/components/store/RelatedProducts'
 
 export const dynamic = 'force-dynamic'
 
+function serializeJsonLd(value: unknown) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029')
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,11 +32,12 @@ export async function generateMetadata({
     }
   }
 
-  const description = product.description || `View ${product.name} from Nakoda Jewellers.`
+  const description = product.seo_description || product.description || `View ${product.name} from Nakoda Jewellers.`
+  const title = product.seo_title || product.name
   const primaryImage = product.product_images?.[0]
 
   return {
-    title: product.name,
+    title,
     description,
     keywords: [
       product.name,
@@ -42,7 +52,7 @@ export async function generateMetadata({
       canonical: `/products/${product.slug}`,
     },
     openGraph: {
-      title: `${product.name} | Nakoda Jewellers`,
+      title: `${title} | Nakoda Jewellers`,
       description,
       url: `/products/${product.slug}`,
       type: 'website',
@@ -52,7 +62,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} | Nakoda Jewellers`,
+      title: `${title} | Nakoda Jewellers`,
       description,
       images: primaryImage ? [primaryImage.image_url] : [],
     },
@@ -91,13 +101,20 @@ export default async function ProductDetailPage({
       '@type': 'Brand',
       name: 'Nakoda Jewellers',
     },
+    offers: {
+      '@type': 'Offer',
+      availability: product.in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      url: `${siteUrl}/products/${product.slug}`,
+      priceCurrency: 'INR',
+      price: '0', // Representing contact-for-price
+    }
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
       />
       
       {/* Breadcrumbs */}

@@ -270,6 +270,9 @@ export function ProductFilters({ categories, collections, activeFilters }: Produ
         className={`fixed inset-0 z-[60] lg:hidden transition-all duration-300 ${
           mobileOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
         }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-heading"
       >
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
         <div
@@ -278,7 +281,7 @@ export function ProductFilters({ categories, collections, activeFilters }: Produ
           }`}
         >
           <div className="sticky top-0 bg-background border-b border-border px-6 py-4 flex items-center justify-between z-10">
-            <h2 className="text-lg font-bold text-foreground">Filters</h2>
+            <h2 id="filter-heading" className="text-lg font-bold text-foreground">Filters</h2>
             <button onClick={() => setMobileOpen(false)} className="p-2 text-muted-foreground hover:text-foreground">
               <X className="h-5 w-5" />
             </button>

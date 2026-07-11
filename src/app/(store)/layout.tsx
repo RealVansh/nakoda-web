@@ -26,12 +26,15 @@ export default async function StoreLayout({ children }: { children: ReactNode })
 
   return (
     <CartProvider>
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="min-h-screen flex flex-col bg-background relative">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] bg-primary text-primary-foreground px-4 py-2 rounded shadow-lg outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary">
+          Skip to content
+        </a>
         {/* Navbar */}
         <StoreNavbar categories={categories} />
 
         {/* Main Content */}
-        <main className="flex-grow">
+        <main id="main-content" className="flex-grow">
           {children}
         </main>
 

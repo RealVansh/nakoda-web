@@ -23,8 +23,8 @@
   --secondary: #F9FAFB;
   --foreground: #111827;
   --muted-foreground: #6B7280;
-  --primary: #C9A227;
-  --primary-dark: #B08D1A;
+  --primary: #6B5515;
+  --primary-dark: #4F3F10;
   --border: #E5E7EB;
 
   background-color: #F9FAFB !important;
@@ -63,7 +63,7 @@
 }
 
 .theme-admin a:hover {
-  color: #B08D1A;
+  color: #4F3F10;
 }
 
 .theme-admin .text-muted-foreground {
@@ -71,7 +71,7 @@
 }
 
 .theme-admin .text-primary {
-  color: #C9A227 !important;
+  color: #6B5515 !important;
 }
 
 .theme-admin .bg-background {

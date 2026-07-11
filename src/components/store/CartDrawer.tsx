@@ -43,13 +43,16 @@ export function CartDrawer() {
         className={`fixed top-0 right-0 h-full w-full max-w-md bg-background shadow-2xl z-[70] transform transition-all duration-300 ease-in-out ${
           isCartOpen ? 'translate-x-0 visible' : 'translate-x-full invisible'
         }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-heading"
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <div className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 id="cart-heading" className="text-lg font-semibold text-foreground">
                 Your Selections ({items.length})
               </h2>
             </div>

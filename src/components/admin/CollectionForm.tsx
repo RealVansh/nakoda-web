@@ -8,14 +8,13 @@ import { createCollection } from '@/actions/collection.actions'
 import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
 
-type CollectionFormData = z.infer<typeof collectionSchema>
+type CollectionFormInput = z.input<typeof collectionSchema>
+type CollectionFormData = z.output<typeof collectionSchema>
 
 export function CollectionForm() {
   const [globalError, setGlobalError] = useState<string | null>(null)
   
-  const form = useForm<CollectionFormData>({
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+  const form = useForm<CollectionFormInput, unknown, CollectionFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
       name: '',
@@ -26,8 +25,7 @@ export function CollectionForm() {
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = form
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function onSubmit(data: any) {
+  async function onSubmit(data: CollectionFormData) {
     setGlobalError(null)
     
     const result = await createCollection(data)
@@ -58,9 +56,15 @@ export function CollectionForm() {
           type="text"
           id="name"
           {...register('name')}
-          className="mt-1 block w-full rounded-md border-border py-2 px-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border outline-none"
+          aria-invalid={errors.name ? 'true' : 'false'}
+          aria-describedby={errors.name ? 'name-error' : undefined}
+          className={`mt-1 block w-full rounded-md py-2 px-3 shadow-sm sm:text-sm border outline-none transition-colors ${
+            errors.name 
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              : 'border-border focus:border-primary focus:ring-primary'
+          }`}
         />
-        {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
+        {errors.name && <p id="name-error" className="mt-1 text-xs text-red-600 font-medium">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -71,10 +75,16 @@ export function CollectionForm() {
           type="text"
           id="slug"
           {...register('slug')}
+          aria-invalid={errors.slug ? 'true' : 'false'}
+          aria-describedby={errors.slug ? 'slug-error' : undefined}
           placeholder="e.g. bridal-collection"
-          className="mt-1 block w-full rounded-md border-border py-2 px-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border outline-none"
+          className={`mt-1 block w-full rounded-md py-2 px-3 shadow-sm sm:text-sm border outline-none transition-colors ${
+            errors.slug 
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              : 'border-border focus:border-primary focus:ring-primary'
+          }`}
         />
-        {errors.slug && <p className="mt-1 text-xs text-red-600">{errors.slug.message}</p>}
+        {errors.slug && <p id="slug-error" className="mt-1 text-xs text-red-600 font-medium">{errors.slug.message}</p>}
       </div>
 
       <div>
@@ -84,10 +94,16 @@ export function CollectionForm() {
         <textarea
           id="description"
           {...register('description')}
+          aria-invalid={errors.description ? 'true' : 'false'}
+          aria-describedby={errors.description ? 'description-error' : undefined}
           rows={3}
-          className="mt-1 block w-full rounded-md border-border py-2 px-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border outline-none"
+          className={`mt-1 block w-full rounded-md py-2 px-3 shadow-sm sm:text-sm border outline-none transition-colors ${
+            errors.description 
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              : 'border-border focus:border-primary focus:ring-primary'
+          }`}
         />
-        {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description.message}</p>}
+        {errors.description && <p id="description-error" className="mt-1 text-xs text-red-600 font-medium">{errors.description.message}</p>}
       </div>
 
       <button

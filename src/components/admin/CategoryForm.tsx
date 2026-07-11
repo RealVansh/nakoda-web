@@ -55,9 +55,15 @@ export function CategoryForm() {
           type="text"
           id="name"
           {...register('name')}
-          className="mt-1 block w-full rounded-md border-border py-2 px-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border outline-none"
+          aria-invalid={errors.name ? 'true' : 'false'}
+          aria-describedby={errors.name ? 'name-error' : undefined}
+          className={`mt-1 block w-full rounded-md py-2 px-3 shadow-sm sm:text-sm border outline-none transition-colors ${
+            errors.name 
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              : 'border-border focus:border-primary focus:ring-primary'
+          }`}
         />
-        {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
+        {errors.name && <p id="name-error" className="mt-1 text-xs text-red-600 font-medium">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -68,10 +74,16 @@ export function CategoryForm() {
           type="text"
           id="slug"
           {...register('slug')}
+          aria-invalid={errors.slug ? 'true' : 'false'}
+          aria-describedby={errors.slug ? 'slug-error' : undefined}
           placeholder="e.g. gold-rings"
-          className="mt-1 block w-full rounded-md border-border py-2 px-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border outline-none"
+          className={`mt-1 block w-full rounded-md py-2 px-3 shadow-sm sm:text-sm border outline-none transition-colors ${
+            errors.slug 
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              : 'border-border focus:border-primary focus:ring-primary'
+          }`}
         />
-        {errors.slug && <p className="mt-1 text-xs text-red-600">{errors.slug.message}</p>}
+        {errors.slug && <p id="slug-error" className="mt-1 text-xs text-red-600 font-medium">{errors.slug.message}</p>}
       </div>
 
       <button

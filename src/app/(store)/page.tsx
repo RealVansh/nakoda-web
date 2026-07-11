@@ -72,7 +72,7 @@ export default async function StoreHomepage() {
     if (n.includes('ring')) return '/images/categories/rings.png'
     if (n.includes('bangle') || n.includes('bracelet')) return '/images/categories/bangles.png'
     if (n.includes('necklace') || n.includes('chain')) return '/images/categories/necklaces.png'
-    if (n.includes('earring')) return '/images/categories/earrings.png'
+    if (n.includes('earring')) return '/images/categories/earrings.jpg'
     return '/images/categories/necklaces.png'
   }
 
@@ -91,6 +91,7 @@ export default async function StoreHomepage() {
               src="/images/hero_collection.png"
               alt="Handcrafted antique gold jewellery collection — bangle, earrings and pendant"
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-center opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-[2000ms]"
               priority
             />
@@ -169,6 +170,7 @@ export default async function StoreHomepage() {
                     src={getCategoryImage(categories[0].name)} 
                     alt={categories[0].name} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 66vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
@@ -192,6 +194,7 @@ export default async function StoreHomepage() {
                     src={getCategoryImage(categories[1].name)} 
                     alt={categories[1].name} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10" />
@@ -212,6 +215,7 @@ export default async function StoreHomepage() {
                     src={getCategoryImage(categories[2].name)} 
                     alt={categories[2].name} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10" />
@@ -264,6 +268,7 @@ export default async function StoreHomepage() {
                     src={occasion.image}
                     alt={`${occasion.name} jewellery collection`}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-[2000ms] group-hover:scale-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />

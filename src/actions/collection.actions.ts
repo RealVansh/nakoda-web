@@ -1,8 +1,8 @@
 'use server'
 
 import { collectionSchema, type ActionResult } from '@/lib/validations'
-import { query, execute } from '@/lib/db'
-import { revalidatePath } from 'next/cache'
+import { apiGet, apiPost, apiDelete } from '@/lib/db'
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache'
 import { z } from 'zod'
 import { v4 as uuidv4 } from 'uuid'
 import { requireAdmin } from './auth.actions'
@@ -25,14 +25,12 @@ export async function createCollection(
     return { success: false, errors: result.error.flatten().fieldErrors }
   }
 
+  // Auto-generate slug if not provided
   const slug = result.data.slug || result.data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
   const id = uuidv4()
 
   try {
-    await execute(
-      `INSERT INTO collections (id, name, slug, description, created_at) VALUES (?, ?, ?, ?, datetime('now'))`,
-      [id, result.data.name, slug, result.data.description ?? null]
-    )
+    await apiPost('/api/collections', { id, name: result.data.name, slug, description: result.data.description ?? null })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     if (message.includes('UNIQUE')) {
@@ -41,7 +39,7 @@ export async function createCollection(
     return { success: false, error: message }
   }
 
-  const collection: Collection = {
+  const collection = {
     id,
     name: result.data.name,
     slug,
@@ -50,6 +48,7 @@ export async function createCollection(
   }
 
   revalidatePath('/admin/collections')
+  revalidateTag('collections', 'default')
   return { success: true, data: collection }
 }
 
@@ -57,24 +56,27 @@ export async function deleteCollection(id: string): Promise<ActionResult> {
   await requireAdmin()
 
   try {
-    await execute(`DELETE FROM collections WHERE id = ?`, [id])
+    await apiDelete(`/api/collections/${id}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     return { success: false, error: message }
   }
 
   revalidatePath('/admin/collections')
+  revalidateTag('collections', 'default')
   return { success: true }
 }
 
-export async function getCollections(): Promise<Collection[]> {
-  try {
-    const data = await query<Collection>(
-      `SELECT * FROM collections ORDER BY created_at DESC`
-    )
-    return data
-  } catch (error) {
-    console.error('Error fetching collections:', error)
-    return []
-  }
-}
+export const getCollections = unstable_cache(
+  async (): Promise<Collection[]> => {
+    try {
+      const data = await apiGet<{ results: Collection[] }>('/api/collections')
+      return data.results
+    } catch (error) {
+      console.error('Error fetching collections:', error)
+      return []
+    }
+  },
+  ['collections-list'],
+  { tags: ['collections'] }
+)

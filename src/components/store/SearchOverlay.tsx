@@ -108,7 +108,12 @@ export function SearchOverlay() {
           />
 
           {/* Search Panel - Edge to Edge Luxury Dropdown */}
-          <div className="fixed top-0 left-0 right-0 z-[90] bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-2xl flex flex-col max-h-[85vh] animate-in slide-in-from-top-4 duration-300">
+          <div 
+            className="fixed top-0 left-0 right-0 z-[90] bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-2xl flex flex-col max-h-[85vh] animate-in slide-in-from-top-4 duration-300"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="search-heading"
+          >
             <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 sm:py-12 shrink-0 relative">
               {/* Close Button */}
               <button
@@ -122,7 +127,7 @@ export function SearchOverlay() {
               {/* Heading */}
               <div className="text-center mb-8">
                 <h2 className="text-xs uppercase tracking-[0.3em] text-primary font-medium mb-3">Search</h2>
-                <p className="text-2xl sm:text-3xl font-serif text-foreground tracking-wide">What are you looking for?</p>
+                <p id="search-heading" className="text-2xl sm:text-3xl font-serif text-foreground tracking-wide">What are you looking for?</p>
               </div>
 
               {/* Input Row - Pill Design */}

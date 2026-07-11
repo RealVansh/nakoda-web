@@ -14,32 +14,31 @@ const s3 = new S3Client({
   },
 });
 
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
 /**
- * Upload a product image to R2 and return its public URL and storage path.
+ * Generate a presigned URL for direct-to-R2 uploads from the browser.
  */
-export async function uploadProductImage(
-  file: File
-): Promise<{ url: string; path: string } | null> {
+export async function generatePresignedUploadUrl(
+  contentType: string,
+  extension: string
+): Promise<{ uploadUrl: string; publicUrl: string; path: string } | null> {
   try {
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const ext = extension || 'jpg';
     const path = `products/${uuidv4()}.${ext}`;
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const command = new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME!,
+      Key: path,
+      ContentType: contentType,
+    });
 
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: process.env.R2_BUCKET_NAME!,
-        Key: path,
-        Body: buffer,
-        ContentType: file.type || 'image/jpeg',
-      })
-    );
-
-    const url = `${process.env.R2_PUBLIC_URL!}/${path}`;
-    return { url, path };
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    const publicUrl = `${process.env.R2_PUBLIC_URL!}/${path}`;
+    
+    return { uploadUrl, publicUrl, path };
   } catch (error) {
-    console.error('Failed to upload image to R2:', error);
+    console.error('Failed to generate presigned URL for R2:', error);
     return null;
   }
 }

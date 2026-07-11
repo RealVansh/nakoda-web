@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
 
 interface ShowcaseProduct {
   id: string
@@ -22,9 +22,9 @@ interface ProductShowcaseProps {
 export function ProductShowcase({ products }: ProductShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [userInteracted, setUserInteracted] = useState(false)
 
   const total = products.length
-  if (total === 0) return null
 
   const goNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % total)
@@ -34,7 +34,7 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
     setActiveIndex((prev) => (prev - 1 + total) % total)
   }, [total])
 
-  // Auto-play: rotate every 5s, pause on hover
+  // Auto-play: rotate every 5s, pause on hover or if user interacted (paused)
   useEffect(() => {
     if (isPaused || total <= 1) return
     const timer = setInterval(goNext, 5000)
@@ -81,13 +81,25 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
   }
 
   const activeProduct = products[activeIndex]
+  if (total === 0) return null
 
   return (
     <div
-      className="relative"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      className="relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+      onMouseEnter={() => !userInteracted && setIsPaused(true)}
+      onMouseLeave={() => !userInteracted && setIsPaused(false)}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Featured Products"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft') goPrev()
+        if (e.key === 'ArrowRight') goNext()
+      }}
     >
+      <div aria-live="polite" className="sr-only">
+        Showing product {activeIndex + 1} of {total}: {activeProduct.name}
+      </div>
       {/* 3D Carousel */}
       <div className="perspective-container relative h-[400px] sm:h-[500px] lg:h-[550px] w-full max-w-4xl mx-auto">
         {products.map((product, index) => {
@@ -183,21 +195,34 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
         </>
       )}
 
-      {/* Dots Indicator */}
+      {/* Controls: Play/Pause and Dots */}
       {total > 1 && (
-        <div className="flex justify-center gap-2 mt-8">
-          {products.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                index === activeIndex
-                  ? 'w-8 bg-primary'
-                  : 'w-1.5 bg-border hover:bg-muted-foreground'
-              }`}
-              aria-label={`Go to product ${index + 1}`}
-            />
-          ))}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <button
+            onClick={() => {
+              setIsPaused(!isPaused)
+              setUserInteracted(true)
+            }}
+            className="p-1.5 text-muted-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+            aria-label={isPaused ? "Play carousel" : "Pause carousel"}
+          >
+            {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
+          </button>
+          
+          <div className="flex gap-2">
+            {products.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveIndex(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  index === activeIndex
+                    ? 'w-8 bg-primary'
+                    : 'w-1.5 bg-border hover:bg-muted-foreground'
+                }`}
+                aria-label={`Go to product ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

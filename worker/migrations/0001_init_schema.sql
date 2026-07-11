@@ -52,8 +52,6 @@ CREATE TABLE IF NOT EXISTS admin_users (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
-  failed_login_attempts INTEGER NOT NULL DEFAULT 0,
-  locked_until TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

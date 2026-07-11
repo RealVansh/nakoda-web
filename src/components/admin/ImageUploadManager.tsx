@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { UploadCloud, Loader2, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { uploadProductImages, removeProductImage, type ProductImage } from '@/actions/product.actions'
+import { addProductImage, removeProductImage, type ProductImage } from '@/actions/product.actions'
 
 export function ImageUploadManager({ 
   productId, 
@@ -30,7 +30,6 @@ export function ImageUploadManager({
     setUploadError(null)
     
     if (deferredMode) {
-      // In deferred mode, we just store files locally for preview
       const newPreviewFiles = Array.from(files).map(file => ({
         file,
         url: URL.createObjectURL(file)
@@ -39,19 +38,52 @@ export function ImageUploadManager({
       setPreviewFiles(updatedFiles)
       onFilesChange?.(updatedFiles.map(pf => pf.file))
     } else {
-      // Instant upload mode
       if (!productId) return
       setIsUploading(true)
-
-      const formData = new FormData()
-      Array.from(files).forEach((file) => formData.append('images', file))
-
-      const result = await uploadProductImages(productId, formData)
       
-      if (result.success && result.data) {
-        setImages(prev => [...prev, ...result.data!])
-      } else {
-        setUploadError(result.error || 'Failed to upload image')
+      const newImages: ProductImage[] = []
+      const errs: string[] = []
+
+      for (const file of Array.from(files)) {
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: JSON.stringify({ filename: file.name, contentType: file.type }),
+            headers: { 'Content-Type': 'application/json' }
+          })
+          
+          if (!res.ok) {
+            const data = await res.json()
+            throw new Error(data.error || 'Failed to get upload URL')
+          }
+          
+          const { uploadUrl, publicUrl, path } = await res.json()
+
+          const uploadRes = await fetch(uploadUrl, {
+            method: 'PUT',
+            body: file,
+            headers: { 'Content-Type': file.type }
+          })
+
+          if (!uploadRes.ok) throw new Error(`Direct upload failed for ${file.name}`)
+
+          const addRes = await addProductImage(productId, publicUrl, path)
+          if (addRes.success && addRes.data) {
+            newImages.push(addRes.data)
+          } else {
+            throw new Error(addRes.error || `Failed to save metadata for ${file.name}`)
+          }
+        } catch (e: unknown) {
+          errs.push(e instanceof Error ? e.message : String(e))
+        }
+      }
+
+      if (newImages.length > 0) {
+        setImages(prev => [...prev, ...newImages])
+      }
+      
+      if (errs.length > 0) {
+        setUploadError(errs.join(', '))
       }
       
       setIsUploading(false)

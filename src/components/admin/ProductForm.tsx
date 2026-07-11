@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { productSchema, METAL_TYPES, OCCASION_OPTIONS, BADGE_OPTIONS, PURITY_OPTIONS } from '@/lib/validations'
-import { createProduct, updateProduct, uploadProductImages, type ProductWithImages } from '@/actions/product.actions'
+import { createProduct, updateProduct, addProductImage, type ProductWithImages } from '@/actions/product.actions'
 import { type Category } from '@/actions/category.actions'
 import { type Collection } from '@/actions/collection.actions'
 import { z } from 'zod'
@@ -113,14 +113,44 @@ export function ProductForm({ initialData, categories, collections }: ProductFor
       // If product creation succeeded and we have deferred files to upload
       if (result.success && result.data && selectedFiles.length > 0) {
         setIsUploadingFiles(true)
-        const formData = new FormData()
-        selectedFiles.forEach(file => formData.append('images', file))
+        const errs: string[] = []
         
-        const uploadResult = await uploadProductImages(result.data.id, formData)
+        for (const file of selectedFiles) {
+          try {
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              body: JSON.stringify({ filename: file.name, contentType: file.type }),
+              headers: { 'Content-Type': 'application/json' }
+            })
+            
+            if (!res.ok) {
+              const data = await res.json()
+              throw new Error(data.error || 'Failed to get upload URL')
+            }
+            
+            const { uploadUrl, publicUrl, path } = await res.json()
+
+            const uploadRes = await fetch(uploadUrl, {
+              method: 'PUT',
+              body: file,
+              headers: { 'Content-Type': file.type }
+            })
+
+            if (!uploadRes.ok) throw new Error(`Direct upload failed for ${file.name}`)
+
+            const addRes = await addProductImage(result.data.id, publicUrl, path)
+            if (!addRes.success) {
+              throw new Error(addRes.error || `Failed to save metadata for ${file.name}`)
+            }
+          } catch (e: unknown) {
+            errs.push(e instanceof Error ? e.message : String(e))
+          }
+        }
+        
         setIsUploadingFiles(false)
         
-        if (!uploadResult.success) {
-          setGlobalError(`Product created, but image upload failed: ${uploadResult.error}`)
+        if (errs.length > 0) {
+          setGlobalError(`Product created, but some image uploads failed: ${errs.join(', ')}`)
           return
         }
       }

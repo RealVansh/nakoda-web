@@ -5,5 +5,12 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.12.29"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260711.1",
+    "wrangler": "^4.110.0"
   }
 }

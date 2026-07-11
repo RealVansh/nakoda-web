@@ -1,7 +1,8 @@
+import { cache } from 'react';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { queryOne } from '@/lib/db';
+import { apiPost } from '@/lib/db';
 
 const SESSION_COOKIE_NAME = 'admin_session';
 const SESSION_SECRET = () => process.env.ADMIN_SESSION_SECRET!;
@@ -10,6 +11,8 @@ interface AdminUser {
   id: string;
   email: string;
   password_hash: string;
+  failed_login_attempts: number;
+  locked_until: string | null;
 }
 
 interface SessionPayload {
@@ -18,24 +21,29 @@ interface SessionPayload {
 }
 
 /**
- * Verify admin login credentials against the D1 database.
- * Returns the admin user's id and email on success, null on failure.
+ * Fetch admin login credentials against the D1 database.
+ * Returns the admin user on success, null on failure.
  */
-export async function verifyLogin(
-  email: string,
-  password: string
-): Promise<{ id: string; email: string } | null> {
-  const admin = await queryOne<AdminUser>(
-    'SELECT id, email, password_hash FROM admin_users WHERE email = ?',
-    [email]
-  );
+export async function getAdminByEmail(
+  email: string
+): Promise<AdminUser | null> {
+  try {
+    const data = await apiPost<{ user: AdminUser | null }>('/api/auth/admin', { email });
+    return data.user || null;
+  } catch (error) {
+    console.error('Login error:', error);
+    return null;
+  }
+}
 
-  if (!admin) return null;
-
-  const isValid = await bcrypt.compare(password, admin.password_hash);
-  if (!isValid) return null;
-
-  return { id: admin.id, email: admin.email };
+/**
+ * Verify admin login credentials.
+ */
+export async function verifyLoginPassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, hash);
 }
 
 /**
@@ -63,8 +71,21 @@ export function verifySessionToken(
 }
 
 /**
+ * Verifies if the admin user still exists in the database.
+ * Wrapped in React cache to avoid duplicate DB calls in the same render pass.
+ */
+const checkAdminExists = cache(async (email: string) => {
+  try {
+    const data = await apiPost<{ user: AdminUser | null }>('/api/auth/admin', { email });
+    return !!data.user;
+  } catch {
+    return false;
+  }
+});
+
+/**
  * Get the current admin session from the request cookies.
- * Returns the session payload if valid, null otherwise.
+ * Returns the session payload if valid and user exists, null otherwise.
  */
 export async function getSession(): Promise<{
   adminId: string;
@@ -73,7 +94,15 @@ export async function getSession(): Promise<{
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
-  return verifySessionToken(token);
+  
+  const payload = verifySessionToken(token);
+  if (!payload) return null;
+
+  // Revalidate against DB to ensure account wasn't deleted/disabled
+  const exists = await checkAdminExists(payload.email);
+  if (!exists) return null;
+
+  return payload;
 }
 
 /**

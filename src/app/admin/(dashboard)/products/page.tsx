@@ -1,12 +1,17 @@
-import { getProducts } from '@/actions/product.actions'
+import { getAdminProducts } from '@/actions/product.actions'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { Plus, Pencil } from 'lucide-react'
 import { DeleteProductButton } from '@/components/admin/DeleteProductButton'
 
+export const metadata: Metadata = {
+  title: 'Products | Admin',
+}
+
 export const dynamic = 'force-dynamic'
 
 export default async function AdminProductsPage() {
-  const products = await getProducts()
+  const products = await getAdminProducts()
 
   return (
     <div className="space-y-6">

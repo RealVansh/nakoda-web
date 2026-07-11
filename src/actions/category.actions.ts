@@ -1,8 +1,8 @@
 'use server'
 
 import { categorySchema, type ActionResult } from '@/lib/validations'
-import { query, execute } from '@/lib/db'
-import { revalidatePath } from 'next/cache'
+import { apiGet, apiPost, apiDelete } from '@/lib/db'
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache'
 import { z } from 'zod'
 import { v4 as uuidv4 } from 'uuid'
 import { requireAdmin } from './auth.actions'
@@ -29,10 +29,7 @@ export async function createCategory(
   const id = uuidv4()
 
   try {
-    await execute(
-      `INSERT INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, datetime('now'))`,
-      [id, result.data.name, slug]
-    )
+    await apiPost('/api/categories', { id, name: result.data.name, slug })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     if (message.includes('UNIQUE')) {
@@ -49,6 +46,7 @@ export async function createCategory(
   }
 
   revalidatePath('/admin/categories')
+  revalidateTag('categories', 'default')
   return { success: true, data: category }
 }
 
@@ -56,24 +54,27 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
   await requireAdmin()
 
   try {
-    await execute(`DELETE FROM categories WHERE id = ?`, [id])
+    await apiDelete(`/api/categories/${id}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     return { success: false, error: message }
   }
 
   revalidatePath('/admin/categories')
+  revalidateTag('categories', 'default')
   return { success: true }
 }
 
-export async function getCategories(): Promise<Category[]> {
-  try {
-    const data = await query<Category>(
-      `SELECT * FROM categories ORDER BY created_at DESC`
-    )
-    return data
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    return []
-  }
-}
+export const getCategories = unstable_cache(
+  async (): Promise<Category[]> => {
+    try {
+      const data = await apiGet<{ results: Category[] }>('/api/categories')
+      return data.results
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      return []
+    }
+  },
+  ['categories-list'],
+  { tags: ['categories'] }
+)

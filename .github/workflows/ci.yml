@@ -1,0 +1,42 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install worker dependencies
+      run: cd worker && npm ci
+
+    - name: Lint Next.js
+      run: npm run lint
+
+    - name: Typecheck Next.js
+      run: npx tsc --noEmit
+
+    - name: Typecheck Worker
+      run: cd worker && npx tsc --noEmit
+
+    - name: Build Next.js
+      # Exclude real DB checks for build step in CI (since we don't have secrets)
+      env:
+        NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+      run: npm run build

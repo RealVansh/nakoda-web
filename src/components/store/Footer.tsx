@@ -84,9 +84,11 @@ export function Footer() {
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
                 <span>11, Periya Naicken Street, Galada Plaza, 1st Floor, Sowcarpet, Chennai - 600 079</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
-                <a href="tel:+919840403795" className="hover:text-primary transition-colors">+91 9840403795</a>
+              <li className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary flex-shrink-0" />
+                <a href={`tel:${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+919840403795'}`} className="hover:text-primary transition-colors text-sm text-muted-foreground">
+                  {process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ? `+${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}` : '+91 9840403795'}
+                </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 flex-shrink-0 text-primary" />

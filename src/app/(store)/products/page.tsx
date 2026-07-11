@@ -33,6 +33,7 @@ type SearchParams = {
   badge?: string
   sort?: string
   page?: string
+  search?: string
 }
 
 export default async function ProductsPage({
@@ -55,6 +56,7 @@ export default async function ProductsPage({
       inStock: resolvedParams.inStock === 'true' ? true : undefined,
       badge: resolvedParams.badge,
       sort: (resolvedParams.sort as 'newest' | 'oldest' | 'name-asc' | 'name-desc') || 'newest',
+      search: resolvedParams.search,
     }),
     getCategories(),
     getCollections(),
@@ -63,7 +65,7 @@ export default async function ProductsPage({
   // Build title based on active filters
   const activeCategory = categories.find(c => c.id === resolvedParams.category)
   const activeCollection = collections.find(c => c.id === resolvedParams.collection)
-  const pageTitle = activeCategory?.name || activeCollection?.name || resolvedParams.occasion || resolvedParams.metal || 'All Collections'
+  const pageTitle = resolvedParams.search ? `Search: ${resolvedParams.search}` : activeCategory?.name || activeCollection?.name || resolvedParams.occasion || resolvedParams.metal || 'All Collections'
 
   // Build query string preserving all filters for pagination
   function paginationQuery(page: number) {
@@ -76,6 +78,7 @@ export default async function ProductsPage({
     if (resolvedParams.inStock) params.inStock = resolvedParams.inStock
     if (resolvedParams.badge) params.badge = resolvedParams.badge
     if (resolvedParams.sort) params.sort = resolvedParams.sort
+    if (resolvedParams.search) params.search = resolvedParams.search
     params.page = String(page)
     return params
   }
