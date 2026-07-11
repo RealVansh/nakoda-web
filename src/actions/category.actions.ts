@@ -1,9 +1,10 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { categorySchema, type ActionResult } from '@/lib/validations'
+import { query, execute } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
+import { v4 as uuidv4 } from 'uuid'
 import { requireAdmin } from './auth.actions'
 
 export type Category = {
@@ -16,7 +17,7 @@ export type Category = {
 export async function createCategory(
   data: z.infer<typeof categorySchema>
 ): Promise<ActionResult<Category>> {
-  const { supabase } = await requireAdmin()
+  await requireAdmin()
 
   const result = categorySchema.safeParse(data)
   if (!result.success) {
@@ -25,18 +26,26 @@ export async function createCategory(
 
   // Auto-generate slug if not provided
   const slug = result.data.slug || result.data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const id = uuidv4()
 
-  const { data: category, error } = await supabase
-    .from('categories')
-    .insert([{ name: result.data.name, slug }])
-    .select()
-    .single()
-
-  if (error) {
-    if (error.code === '23505') {
+  try {
+    await execute(
+      `INSERT INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, datetime('now'))`,
+      [id, result.data.name, slug]
+    )
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    if (message.includes('UNIQUE')) {
       return { success: false, error: 'A category with this name or slug already exists' }
     }
-    return { success: false, error: error.message }
+    return { success: false, error: message }
+  }
+
+  const category = {
+    id,
+    name: result.data.name,
+    slug,
+    created_at: new Date().toISOString(),
   }
 
   revalidatePath('/admin/categories')
@@ -44,15 +53,13 @@ export async function createCategory(
 }
 
 export async function deleteCategory(id: string): Promise<ActionResult> {
-  const { supabase } = await requireAdmin()
+  await requireAdmin()
 
-  const { error } = await supabase
-    .from('categories')
-    .delete()
-    .eq('id', id)
-
-  if (error) {
-    return { success: false, error: error.message }
+  try {
+    await execute(`DELETE FROM categories WHERE id = ?`, [id])
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
   }
 
   revalidatePath('/admin/categories')
@@ -60,16 +67,13 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  if (error) {
+  try {
+    const data = await query<Category>(
+      `SELECT * FROM categories ORDER BY created_at DESC`
+    )
+    return data
+  } catch (error) {
     console.error('Error fetching categories:', error)
     return []
   }
-
-  return data
 }

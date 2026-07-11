@@ -1,8 +1,8 @@
 import { type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
+import { protectAdminRoutes } from '@/lib/auth-middleware'
 
 export async function proxy(request: NextRequest) {
-  return await updateSession(request)
+  return await protectAdminRoutes(request)
 }
 
 export const config = {

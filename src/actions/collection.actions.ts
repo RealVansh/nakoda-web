@@ -1,9 +1,10 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { collectionSchema, type ActionResult } from '@/lib/validations'
+import { query, execute } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
+import { v4 as uuidv4 } from 'uuid'
 import { requireAdmin } from './auth.actions'
 
 export type Collection = {
@@ -17,7 +18,7 @@ export type Collection = {
 export async function createCollection(
   data: z.infer<typeof collectionSchema>
 ): Promise<ActionResult<Collection>> {
-  const { supabase } = await requireAdmin()
+  await requireAdmin()
 
   const result = collectionSchema.safeParse(data)
   if (!result.success) {
@@ -25,18 +26,27 @@ export async function createCollection(
   }
 
   const slug = result.data.slug || result.data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const id = uuidv4()
 
-  const { data: collection, error } = await supabase
-    .from('collections')
-    .insert([{ ...result.data, slug }])
-    .select()
-    .single()
-
-  if (error) {
-    if (error.code === '23505') {
+  try {
+    await execute(
+      `INSERT INTO collections (id, name, slug, description, created_at) VALUES (?, ?, ?, ?, datetime('now'))`,
+      [id, result.data.name, slug, result.data.description ?? null]
+    )
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    if (message.includes('UNIQUE')) {
       return { success: false, error: 'A collection with this name or slug already exists' }
     }
-    return { success: false, error: error.message }
+    return { success: false, error: message }
+  }
+
+  const collection: Collection = {
+    id,
+    name: result.data.name,
+    slug,
+    description: result.data.description ?? null,
+    created_at: new Date().toISOString(),
   }
 
   revalidatePath('/admin/collections')
@@ -44,15 +54,13 @@ export async function createCollection(
 }
 
 export async function deleteCollection(id: string): Promise<ActionResult> {
-  const { supabase } = await requireAdmin()
+  await requireAdmin()
 
-  const { error } = await supabase
-    .from('collections')
-    .delete()
-    .eq('id', id)
-
-  if (error) {
-    return { success: false, error: error.message }
+  try {
+    await execute(`DELETE FROM collections WHERE id = ?`, [id])
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
   }
 
   revalidatePath('/admin/collections')
@@ -60,16 +68,13 @@ export async function deleteCollection(id: string): Promise<ActionResult> {
 }
 
 export async function getCollections(): Promise<Collection[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('collections')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  if (error) {
+  try {
+    const data = await query<Collection>(
+      `SELECT * FROM collections ORDER BY created_at DESC`
+    )
+    return data
+  } catch (error) {
     console.error('Error fetching collections:', error)
     return []
   }
-
-  return data
 }

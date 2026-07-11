@@ -1,15 +1,21 @@
 import type { NextConfig } from "next";
 
-const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-  : '**.supabase.co'
+const r2PublicHost = process.env.R2_PUBLIC_URL
+  ? new URL(process.env.R2_PUBLIC_URL).hostname
+  : 'pub-*.r2.dev'
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: supabaseHost,
+        hostname: r2PublicHost,
+        pathname: '/**',
+      },
+      // Keep Supabase pattern temporarily during migration for existing cached images
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
         pathname: '/storage/v1/object/public/product-images/**',
       },
     ],

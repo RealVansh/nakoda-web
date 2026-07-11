@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.107.0",
+    "@aws-sdk/client-s3": "^3.1085.0",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
     "next": "16.2.7",
+    "ogl": "^1.0.11",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "uuid": "^14.0.0"
@@ -19,6 +21,8 @@
   "devDependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
