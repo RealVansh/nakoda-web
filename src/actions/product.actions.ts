@@ -8,10 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { requireAdmin } from './auth.actions'
 import { deleteProductImage } from '@/lib/r2'
 
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
-const MAX_UPLOAD_FILES = 10
-const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
-const ALLOWED_IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp'])
+
 
 export type Product = {
   id: string
@@ -104,13 +101,7 @@ function formatProduct<T extends { product_images?: ProductImage[], badges?: str
   return product
 }
 
-function validateImageFile(file: File): string | null {
-  const extension = file.name.split('.').pop()?.toLowerCase()
-  if (!extension || !ALLOWED_IMAGE_EXTENSIONS.has(extension)) return 'Only JPG, PNG, and WebP images are allowed'
-  if (!ALLOWED_IMAGE_TYPES.has(file.type)) return 'Only JPG, PNG, and WebP images are allowed'
-  if (file.size > MAX_IMAGE_SIZE_BYTES) return 'Each image must be 5MB or smaller'
-  return null
-}
+
 
 function assembleProductsWithImages(products: Record<string, unknown>[], images: ProductImage[]): ProductWithImages[] {
   if (products.length === 0) return []
@@ -480,7 +471,7 @@ export async function removeProductImage(imageId: string): Promise<ActionResult>
     revalidateTag('products', 'default')
 
     return { success: true }
-  } catch (err) {
+  } catch {
     return { success: false, error: 'Could not delete image metadata' }
   }
 }

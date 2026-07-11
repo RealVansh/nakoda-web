@@ -113,7 +113,7 @@ app.post('/api/products/paginated', async (c) => {
   const offset = (safePage - 1) * safeLimit
 
   const conditions: string[] = ['p.is_active = 1']
-  const queryParams: any[] = []
+  const queryParams: (string | number)[] = []
 
   if (categoryId) { conditions.push('p.category_id = ?'); queryParams.push(categoryId) }
   if (collectionId) { conditions.push('p.collection_id = ?'); queryParams.push(collectionId) }
@@ -177,7 +177,7 @@ app.post('/api/products/new-arrivals', async (c) => {
 app.post('/api/products/related', async (c) => {
   const { categoryId, excludeProductId, limit = 4 } = await c.req.json()
   let sql = `${BASE_SELECT} WHERE p.is_active = 1 AND p.id != ?`
-  const params: any[] = [excludeProductId]
+  const params: (string | number)[] = [excludeProductId]
   if (categoryId) {
     sql += ' AND p.category_id = ?'
     params.push(categoryId)
@@ -269,7 +269,7 @@ app.get('/api/products/images/:productId/max-order', async (c) => {
 
 app.post('/api/products/images', async (c) => {
   const body = await c.req.json()
-  const [id, product_id, image_url, image_path, alt_text, fallback_display_order] = body.params
+  const [id, product_id, image_url, image_path, alt_text] = body.params
   
   await c.env.DB.prepare(
     `INSERT INTO product_images (id, product_id, image_url, image_path, alt_text, display_order)
