@@ -262,7 +262,7 @@ export const getProducts = unstable_cache(
 export async function getAdminProducts(): Promise<ProductListItem[]> {
   await requireAdmin()
   try {
-    const data = await apiGet<{ products: Record<string, unknown>[], images: ProductImage[] }>('/api/products/admin')
+    const data = await apiGet<{ products: Record<string, unknown>[], images: ProductImage[] }>('/api/products/admin', { cache: 'no-store' })
     return assembleProductsWithImages(data.products, data.images)
   } catch (error) {
     console.error('Error fetching admin products:', error)
@@ -291,7 +291,7 @@ export const getPaginatedProducts = unstable_cache(
 export async function getProductById(id: string): Promise<ProductWithImages | null> {
   await requireAdmin() // Added for security to protect draft products
   try {
-    const data = await apiGet<{ product: Record<string, unknown> | null, images: ProductImage[] }>(`/api/products/${id}`)
+    const data = await apiGet<{ product: Record<string, unknown> | null, images: ProductImage[] }>(`/api/products/${id}`, { cache: 'no-store' })
     if (!data.product) return null
     
     const assembled = {

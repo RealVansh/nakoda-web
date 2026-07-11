@@ -18,7 +18,6 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
     
     const res = await fetch(url, {
       ...options,
-      cache: 'no-store',
       signal: controller.signal,
     });
     
@@ -61,21 +60,23 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
+export async function apiGet<T>(path: string, customOptions?: RequestInit): Promise<T> {
   const url = `${D1_API_URL()}${path}`;
   const res = await fetchWithRetry(url, {
     method: 'GET',
     headers: getHeaders(),
+    ...customOptions,
   });
   return handleResponse<T>(res);
 }
 
-export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
+export async function apiPost<T>(path: string, body?: unknown, customOptions?: RequestInit): Promise<T> {
   const url = `${D1_API_URL()}${path}`;
   const res = await fetchWithRetry(url, {
     method: 'POST',
     headers: getHeaders(),
     body: body ? JSON.stringify(body) : undefined,
+    ...customOptions,
   });
   return handleResponse<T>(res);
 }
