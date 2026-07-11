@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, type ReactNode } from 'react'
+import { useRef, useState, useEffect, type ReactNode } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 interface MotionSectionProps {
@@ -15,6 +15,13 @@ interface MotionSectionProps {
 export function MotionSection({ children, className, delay = 0, stagger = false }: MotionSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const activeInView = mounted && isInView
 
   if (stagger) {
     return (
@@ -22,7 +29,7 @@ export function MotionSection({ children, className, delay = 0, stagger = false 
         ref={ref}
         className={className}
         initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
+        animate={activeInView ? 'visible' : 'hidden'}
         variants={{
           hidden: {},
           visible: {
@@ -43,7 +50,7 @@ export function MotionSection({ children, className, delay = 0, stagger = false 
       ref={ref}
       className={className}
       initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      animate={activeInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
