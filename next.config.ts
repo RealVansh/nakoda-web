@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
         hostname: r2PublicHost,
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'gstvzplbwluyyctvisha.supabase.co',
+        pathname: '/**',
+      },
     ],
   },
   async headers() {
