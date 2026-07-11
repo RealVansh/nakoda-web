@@ -1,0 +1,8 @@
+name = "nakoda-d1-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nakoda-db"
+database_id = "9696e5fd-bbf4-4338-9d47-dff123a7e99f"
