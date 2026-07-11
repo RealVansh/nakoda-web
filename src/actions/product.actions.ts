@@ -439,7 +439,7 @@ export async function addProductImage(
       display_order: 0, // This will be outdated on client until refresh, but fine for now
     }
 
-    revalidatePath(`/admin/products/${productId}`)
+    revalidatePath(`/admin/products/${productId}/edit`)
     revalidatePath('/admin/products')
     revalidatePath('/products')
     revalidateTag('products', 'default')

@@ -18,6 +18,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
     
     const res = await fetch(url, {
       ...options,
+      cache: 'no-store',
       signal: controller.signal,
     });
     
