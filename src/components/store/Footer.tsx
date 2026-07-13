@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Phone, MapPin, Mail } from 'lucide-react'
 
 export function Footer() {
@@ -11,7 +12,9 @@ export function Footer() {
           
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-1">
-            <span className="text-xl font-extrabold tracking-widest text-primary uppercase">Nakoda</span>
+            <Link href="/">
+              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={180} height={120} className="object-contain" />
+            </Link>
             {/* Brand Confidence tagline */}
             <p className="text-sm text-muted-foreground leading-relaxed mt-2">
               Bangle Specialists & Antique Manufacturers.<br />
@@ -103,10 +106,15 @@ export function Footer() {
           <p className="text-sm text-muted-foreground text-center md:text-left">
             &copy; {new Date().getFullYear()} Nakoda Jewellers. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Crafted with</span>
-            <span className="text-red-500">♥</span>
-            <span>for timeless elegance.</span>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span>Designed & Developed by Vansh</span>
+            <span className="text-border mx-1">•</span>
+            <a href="mailto:vanshv0920@gmail.com" className="hover:text-primary transition-colors" aria-label="Email Vansh">
+              <Mail className="h-4 w-4" />
+            </a>
+            <a href="tel:+917010526173" className="hover:text-primary transition-colors" aria-label="Call Vansh">
+              <Phone className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>
