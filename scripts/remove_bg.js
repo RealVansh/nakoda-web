@@ -1,4 +1,5 @@
-const { Jimp, rgbaToInt } = require('jimp');
+/* eslint-disable */
+const { Jimp } = require('jimp');
 
 async function processImage() {
   try {
