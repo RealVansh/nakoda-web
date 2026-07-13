@@ -13,7 +13,7 @@ export function Footer() {
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-1 -ml-4">
             <Link href="/">
-              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={180} height={120} className="object-contain mix-blend-lighten" />
+              <Image src="/images/nakoda_logo.png" alt="Nakoda Jewellers" width={240} height={160} className="object-contain" />
             </Link>
             {/* Brand Confidence tagline */}
             <p className="text-sm text-muted-foreground leading-relaxed mt-2">
