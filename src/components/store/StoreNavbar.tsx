@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 import { Menu, X, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { SearchOverlay } from '@/components/store/SearchOverlay'
@@ -37,8 +38,7 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
         <div className="flex justify-between items-center h-20">
           <div className="flex justify-start items-center">
             <Link href="/" className="flex flex-col">
-              <span className="text-2xl font-extrabold tracking-widest text-primary uppercase">Nakoda</span>
-              <span className="text-xs tracking-widest text-muted-foreground uppercase">Jewellers</span>
+              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={140} height={40} className="object-contain" priority />
             </Link>
           </div>
           
