@@ -18,6 +18,7 @@ export function MotionSection({ children, className, delay = 0, stagger = false 
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line
     setMounted(true)
   }, [])
 
