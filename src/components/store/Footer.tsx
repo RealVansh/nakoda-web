@@ -11,9 +11,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
           
           {/* Brand Info */}
-          <div className="col-span-1 md:col-span-1">
+          <div className="col-span-1 md:col-span-1 -ml-4">
             <Link href="/">
-              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={180} height={120} className="object-contain" />
+              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={180} height={120} className="object-contain mix-blend-lighten" />
             </Link>
             {/* Brand Confidence tagline */}
             <p className="text-sm text-muted-foreground leading-relaxed mt-2">
@@ -107,8 +107,8 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Nakoda Jewellers. All rights reserved.
           </p>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span>Designed & Developed by Vansh</span>
-            <span className="text-border mx-1">•</span>
+            <span>Designed & Developed by Vansh V</span>
+            <span className="text-muted-foreground/50 mx-1">•</span>
             <a href="mailto:vanshv0920@gmail.com" className="hover:text-primary transition-colors" aria-label="Email Vansh">
               <Mail className="h-4 w-4" />
             </a>

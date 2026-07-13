@@ -37,8 +37,8 @@ export function StoreNavbar({ categories }: { categories: { id: string; name: st
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex justify-start items-center">
-            <Link href="/" className="flex flex-col">
-              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={140} height={40} className="object-contain" priority />
+            <Link href="/" className="flex flex-col -ml-4">
+              <Image src="/images/nakoda_logo.jpg" alt="Nakoda Jewellers" width={140} height={40} className="object-contain mix-blend-lighten" priority />
             </Link>
           </div>
           
